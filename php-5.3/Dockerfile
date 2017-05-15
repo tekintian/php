@@ -79,7 +79,7 @@ RUN chmod 777 install.sh && \
     bash install.sh && \
     rm -rf /tmp/*
 
-# install composer
+# install composer  for php5.3
 RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer
@@ -88,6 +88,7 @@ RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
 ADD $REMOTE_PATH/entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
+
 
 # Define the default command.
 CMD ["bash"]
