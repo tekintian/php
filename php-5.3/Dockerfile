@@ -1,94 +1,113 @@
-FROM tekintian/base:latest
-MAINTAINER Tekin Tian <tekintian@gmail.com>
+FROM debian:jessie
+MAINTAINER TekinTian <tekintian@gmail.com>
 
-ENV PHP_INSTALL_DIR=/usr/local/php \
-    PHP_VERSION=5.3.29 \
-    IMAGICK_PECL_VERSION=3.3.0 \
-    LIBMEMCACHED_VERSION=1.0.18 \
-    REDIS_PECL_VERSION=3.1.0 \
-    SWOOLE_VERSION=1.9.3 \
-    REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
+# persistent / runtime deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      librecode0 \
+      libmysqlclient-dev \
+      libsqlite3-0 \
+      libxml2 \
+      libjpeg62 \
+      libmcrypt4 \
+    && apt-get clean \
+    && rm -r /var/lib/apt/lists/*
 
-WORKDIR /tmp
+# phpize deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      autoconf \
+      file \
+      g++ \
+      gcc \
+      libc-dev \
+      make \
+      pkg-config \
+      re2c \
+    && apt-get clean \
+    && rm -r /var/lib/apt/lists/*
 
-# install php
-RUN apt-get remove autoconf -y && \
-    apt-get autoremove -y && \
-   apt-get install -y libfreetype6-dev && \
-   mkdir /usr/include/freetype2/freetype && \
-  ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h && \
+ENV PHP_INI_DIR /usr/local/php53/etc
+RUN mkdir -p $PHP_INI_DIR/conf.d
 
-wget -c --no-check-certificate http://downloads.sourceforge.net/project/re2c/0.16/re2c-0.16.tar.gz && \
-    tar xzf re2c-0.16.tar.gz && \
-    cd re2c-0.16 && \
-    ./configure && make && make install && \
-    cd ..  && \
-    wget -c --no-check-certificate http://ftp.gnu.org/gnu/autoconf/autoconf-2.13.tar.gz && \
-    tar xzf autoconf-2.13.tar.gz && \
-    cd autoconf-2.13 && \
-    ./configure --prefix=/usr/local/autoconf-2.13 && \
-    make && make install && \
-     export PHP_AUTOCONF=/usr/local/autoconf-2.13/bin/autoconf && \
-    export PHP_AUTOHEADER=/usr/local/autoconf-2.13/bin/autoheader && \
-    wget -c --no-check-certificate http://www.php.net/distributions/php-$PHP_VERSION.tar.gz && \
-    tar xzf php-$PHP_VERSION.tar.gz && \
-    cd php-$PHP_VERSION && \
-     ./buildconf --force && \
-    ./configure --prefix=$PHP_INSTALL_DIR --with-config-file-path=$PHP_INSTALL_DIR/etc \
-        --with-config-file-scan-dir=$PHP_INSTALL_DIR/etc/php.d \
-        --with-fpm-user=$RUN_USER --with-fpm-group=$RUN_USER --enable-fpm --enable-opcache \
-        --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd \
-        --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib \
-        --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-exif \
-        --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local --enable-mbregex \
-        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl \
-        --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-ftp --enable-intl --with-xsl \
-        --with-gettext --enable-zip --enable-soap --disable-debug && \
-    sed -i '/^BUILD_/ s/\$(CC)/\$(CXX)/g' Makefile && \
-    make ZEND_EXTRA_LIBS='-liconv' &&  \
-    make install && \
-    mkdir -p $PHP_INSTALL_DIR/etc/php.d && \
-    /bin/cp php.ini-production $PHP_INSTALL_DIR/etc/php.ini && \
-    /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
-    chmod +x /etc/init.d/php-fpm && \
-    rm -rf /tmp/*
+ENV GPG_KEYS 0B96609E270F565C13292B24C13C70B87267B52D 0A95E9A026542D53835E3F3A7DEC4E69FC9C83D7 0E604491
+RUN set -xe \
+  && for key in $GPG_KEYS; do \
+    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+  done
 
-# cd php-memcached
-RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBMEMCACHED_VERSION/+download/libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
-    tar xzf libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
-    cd libmemcached-$LIBMEMCACHED_VERSION && \
-    sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
-    ./configure && \
-    make && make install && \
-    cd .. && \
-    wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/memcached-2.2.0.tgz && \
-    tar xzf memcached-2.2.0.tgz && \
-    cd memcached-2.2.0 && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
-    make && make install && \
-    echo "extension=memcached.so" >> $PHP_INSTALL_DIR/etc/php.d/ext-memcached.ini && \
-    echo "memcached.use_sasl=1" >> $PHP_INSTALL_DIR/etc/php.d/ext-memcached.ini && \
-    rm -rf /tmp/*
+# compile openssl, otherwise --with-openssl won't work
+RUN OPENSSL_VERSION="1.1.0e" \
+      && cd /tmp \
+      && mkdir openssl \
+      && curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" -o openssl.tar.gz \
+      && curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz.asc" -o openssl.tar.gz.asc \
+      && gpg --verify openssl.tar.gz.asc \
+      && tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
+      && cd /tmp/openssl \
+      && ./config && make && make install \
+      && rm -rf /tmp/*
 
-ADD ${REMOTE_PATH}/ext-opcache.ini $PHP_INSTALL_DIR/etc/php.d/ext-opcache.ini
+ENV PHP_VERSION 5.3.29
 
-# run install script
-ADD ${REMOTE_PATH}/install.sh /tmp/install.sh
-RUN chmod 777 install.sh && \
-    bash install.sh && \
-    rm -rf /tmp/*
+# php 5.3 needs older autoconf
+# --enable-mysqlnd is included below because it's harder to compile after the fact the extensions are (since it's a plugin for several extensions, not an extension in itself)
+RUN buildDeps=" \
+                autoconf2.13 \
+                libcurl4-openssl-dev \
+                libreadline6-dev \
+                librecode-dev \
+                libsqlite3-dev \
+                libssl-dev \
+                libxml2-dev \
+                xz-utils \
+                libjpeg-dev \
+                libmcrypt-dev \
+                libpng-dev \
+                freetype* \
+      " \
+      && set -x \
+      && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
+      && curl -SL "http://php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" -o php.tar.xz \
+      && curl -SL "http://php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror" -o php.tar.xz.asc \
+      && gpg --verify php.tar.xz.asc \
+      && mkdir -p /usr/src/php \
+      && tar -xof php.tar.xz -C /usr/src/php --strip-components=1 \
+      && rm php.tar.xz* \
+      && cd /usr/src/php \
+      && ./configure \
+            --with-config-file-path="$PHP_INI_DIR" \
+            --with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
+            --enable-fpm \
+            --enable-mbstring \            
+            --enable-soap \
+            --disable-cgi \
+            --enable-mysqlnd \
+            --with-pdo-mysql \
+            --with-mysql \
+            --with-curl \
+            --with-mhash \
+            --with-gd \
+            --with-mcrypt \
+            --with-jpeg-dir=/usr \
+            --with-png-dir=/usr \
+            --with-openssl=/usr/local/ssl \
+            --with-readline \
+            --with-recode \
+            --enable-zip \
+            --with-zlib \
+      && make -j"$(nproc)" \
+      && make install \
+      && { find /usr/local/bin /usr/local/sbin /usr/local/php53/bin -type f -executable -exec strip --strip-all '{}' + || true; } \
+      && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps \
+      && make clean
 
-# install composer  for php5.3
-RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
-    mv composer.phar /usr/local/bin/composer && \
-    chmod a+x /usr/local/bin/composer
+COPY docker-php-* /usr/local/php53/bin/
 
-# Set the entrypoint script.
-ADD $REMOTE_PATH/entrypoint.sh /entrypoint.sh
-RUN chmod 777 /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+WORKDIR /var/www/html
 
 
-# Define the default command.
-CMD ["bash"]
+COPY php-fpm.conf /usr/local/php53/etc/
+
+EXPOSE 9000
+CMD ["php-fpm"]
