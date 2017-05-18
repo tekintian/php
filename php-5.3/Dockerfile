@@ -33,7 +33,7 @@ RUN mkdir -p $PHP_INI_DIR/conf.d
 ENV GPG_KEYS 0B96609E270F565C13292B24C13C70B87267B52D 0A95E9A026542D53835E3F3A7DEC4E69FC9C83D7 0E604491
 RUN set -xe \
   && for key in $GPG_KEYS; do \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys $key; \
   done
 
 # compile openssl, otherwise --with-openssl won't work
