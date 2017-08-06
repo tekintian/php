@@ -1,5 +1,10 @@
-php for docker
+php 5.6.x  for docker
 
 
-5.3--7.1
+
+tekin
+http://dev.yunnan.ws
+
+
+
 
