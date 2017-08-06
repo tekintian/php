@@ -1,30 +1,30 @@
-Docker build ÃüÁî
- Docker ÃüÁî´óÈ«Docker ÃüÁî´óÈ«
-docker build : Ê¹ÓÃDockerfile´´½¨¾µÏñ¡£
-Óï·¨
+Docker build å‘½ä»¤
+ Docker å‘½ä»¤å¤§å…¨Docker å‘½ä»¤å¤§å…¨
+docker build : ä½¿ç”¨Dockerfileåˆ›å»ºé•œåƒã€‚
+è¯­æ³•
 docker build [OPTIONS] PATH | URL | -
-OPTIONSËµÃ÷£º
---build-arg=[] :ÉèÖÃ¾µÏñ´´½¨Ê±µÄ±äÁ¿£»
---cpu-shares :ÉèÖÃ cpu Ê¹ÓÃÈ¨ÖØ£»
---cpu-period :ÏŞÖÆ CPU CFSÖÜÆÚ£»
---cpu-quota :ÏŞÖÆ CPU CFSÅä¶î£»
---cpuset-cpus :Ö¸¶¨Ê¹ÓÃµÄCPU id£»
---cpuset-mems :Ö¸¶¨Ê¹ÓÃµÄÄÚ´æ id£»
---disable-content-trust :ºöÂÔĞ£Ñé£¬Ä¬ÈÏ¿ªÆô£»
--f :Ö¸¶¨ÒªÊ¹ÓÃµÄDockerfileÂ·¾¶£»
---force-rm :ÉèÖÃ¾µÏñ¹ı³ÌÖĞÉ¾³ıÖĞ¼äÈİÆ÷£»
---isolation :Ê¹ÓÃÈİÆ÷¸ôÀë¼¼Êõ£»
---label=[] :ÉèÖÃ¾µÏñÊ¹ÓÃµÄÔªÊı¾İ£»
--m :ÉèÖÃÄÚ´æ×î´óÖµ£»
---memory-swap :ÉèÖÃSwapµÄ×î´óÖµÎªÄÚ´æ+swap£¬"-1"±íÊ¾²»ÏŞswap£»
---no-cache :´´½¨¾µÏñµÄ¹ı³Ì²»Ê¹ÓÃ»º´æ£»
---pull :³¢ÊÔÈ¥¸üĞÂ¾µÏñµÄĞÂ°æ±¾£»
--q :°²¾²Ä£Ê½£¬³É¹¦ºóÖ»Êä³ö¾µÏñID£»
---rm :ÉèÖÃ¾µÏñ³É¹¦ºóÉ¾³ıÖĞ¼äÈİÆ÷£»
---shm-size :ÉèÖÃ/dev/shmµÄ´óĞ¡£¬Ä¬ÈÏÖµÊÇ64M£»
---ulimit :UlimitÅäÖÃ¡£
-ÊµÀı
-Ê¹ÓÃµ±Ç°Ä¿Â¼µÄDockerfile´´½¨¾µÏñ¡£
+OPTIONSè¯´æ˜ï¼š
+--build-arg=[] :è®¾ç½®é•œåƒåˆ›å»ºæ—¶çš„å˜é‡ï¼›
+--cpu-shares :è®¾ç½® cpu ä½¿ç”¨æƒé‡ï¼›
+--cpu-period :é™åˆ¶ CPU CFSå‘¨æœŸï¼›
+--cpu-quota :é™åˆ¶ CPU CFSé…é¢ï¼›
+--cpuset-cpus :æŒ‡å®šä½¿ç”¨çš„CPU idï¼›
+--cpuset-mems :æŒ‡å®šä½¿ç”¨çš„å†…å­˜ idï¼›
+--disable-content-trust :å¿½ç•¥æ ¡éªŒï¼Œé»˜è®¤å¼€å¯ï¼›
+-f :æŒ‡å®šè¦ä½¿ç”¨çš„Dockerfileè·¯å¾„ï¼›
+--force-rm :è®¾ç½®é•œåƒè¿‡ç¨‹ä¸­åˆ é™¤ä¸­é—´å®¹å™¨ï¼›
+--isolation :ä½¿ç”¨å®¹å™¨éš”ç¦»æŠ€æœ¯ï¼›
+--label=[] :è®¾ç½®é•œåƒä½¿ç”¨çš„å…ƒæ•°æ®ï¼›
+-m :è®¾ç½®å†…å­˜æœ€å¤§å€¼ï¼›
+--memory-swap :è®¾ç½®Swapçš„æœ€å¤§å€¼ä¸ºå†…å­˜+swapï¼Œ"-1"è¡¨ç¤ºä¸é™swapï¼›
+--no-cache :åˆ›å»ºé•œåƒçš„è¿‡ç¨‹ä¸ä½¿ç”¨ç¼“å­˜ï¼›
+--pull :å°è¯•å»æ›´æ–°é•œåƒçš„æ–°ç‰ˆæœ¬ï¼›
+-q :å®‰é™æ¨¡å¼ï¼ŒæˆåŠŸååªè¾“å‡ºé•œåƒIDï¼›
+--rm :è®¾ç½®é•œåƒæˆåŠŸååˆ é™¤ä¸­é—´å®¹å™¨ï¼›
+--shm-size :è®¾ç½®/dev/shmçš„å¤§å°ï¼Œé»˜è®¤å€¼æ˜¯64Mï¼›
+--ulimit :Ulimité…ç½®ã€‚
+å®ä¾‹
+ä½¿ç”¨å½“å‰ç›®å½•çš„Dockerfileåˆ›å»ºé•œåƒã€‚
 docker build -t runoob/ubuntu:v1 . 
-Ê¹ÓÃURL github.com/creack/docker-firefox µÄ Dockerfile ´´½¨¾µÏñ¡£
+ä½¿ç”¨URL github.com/creack/docker-firefox çš„ Dockerfile åˆ›å»ºé•œåƒã€‚
 docker build github.com/creack/docker-firefox
