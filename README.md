@@ -1,5 +1,3 @@
-php for docker
+php 7.1.8 for docker
 
-
-5.3--7.1
 
