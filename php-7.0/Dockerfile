@@ -7,7 +7,7 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.0 \
     SWOOLE_VERSION=1.9.3 \
-    AUTH_PECL_VERSION=2.0.2 \
+    OAUTH_PECL_VERSION=2.0.2 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
 WORKDIR /tmp
@@ -96,9 +96,9 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-$REDIS_PECL_VER
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-$AUTH_PECL_VERSION.tgz && \
-    tar xzf oauth-$AUTH_PECL_VERSION.tgz && \
-    cd oauth-$AUTH_PECL_VERSION && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
+    tar xzf oauth-2.0.2.tgz && \
+    cd oauth-2.0.2 && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
