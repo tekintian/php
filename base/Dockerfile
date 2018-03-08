@@ -1,13 +1,13 @@
-FROM tekintian/debian:latest
+FROM debian:latest
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV RUN_USER=www \
-    LIBICONV_VERSION=1.14 \
-    CURL_VERSION=7.52.1 \
+    LIBICONV_VERSION=1.15 \
+    CURL_VERSION=7.58.0 \
     LIBMCRYPT_VERSION=2.5.8 \
     MHASH_VERSION=0.9.9.9 \
     MCRYPT_VERSION=2.6.8 \
-    JEMALLOC_VERSION=4.4.0
+    JEMALLOC_VERSION=5.0.1
 
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y ca-certificates wget gcc g++ make cmake autoconf patch bzip2 psmisc pkg-config sendmail openssl libssl-dev curl libcurl4-openssl-dev libxslt-dev libicu-dev libxml2 libxml2-dev libjpeg-dev libpng12-dev libpng3 libfreetype6 libfreetype6-dev libsasl2-dev libevent-dev && \
@@ -18,7 +18,7 @@ WORKDIR /tmp
 
 # install libiconv
 ADD ./libiconv-glibc-2.16.patch /tmp/libiconv-glibc-2.16.patch
-RUN wget -c --no-check-certificate http://mirrors.ustc.edu.cn/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz && \
+RUN wget -c --no-check-certificate http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz && \
     tar xzf libiconv-${LIBICONV_VERSION}.tar.gz && \
     patch -d libiconv-${LIBICONV_VERSION} -p0 < libiconv-glibc-2.16.patch && \
     cd libiconv-${LIBICONV_VERSION} && \
