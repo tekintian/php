@@ -90,7 +90,7 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-$REDIS_PECL_VER
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-RUN apt-get update && apt-get install libpcre3 libpcre3-dev && \
+RUN apt-get update -y && apt-get install libpcre3 libpcre3-dev -y && \
    wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
     tar xzf oauth-2.0.2.tgz && \
     cd oauth-2.0.2 && \
@@ -101,9 +101,9 @@ RUN apt-get update && apt-get install libpcre3 libpcre3-dev && \
     rm -rf /tmp/*
 
 # install swoole
-RUN wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/v$SWOOLE_VERSION-stable.tar.gz && \
-    tar xzf v$SWOOLE_VERSION-stable.tar.gz && \
-    cd swoole-src-$SWOOLE_VERSION-stable && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-$SWOOLE_VERSION.tgz  && \
+    tar xzf swoole-$SWOOLE_VERSION.tgz && \
+    cd swoole-$SWOOLE_VERSION && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config --enable-jemalloc && \
     make && make install && \
