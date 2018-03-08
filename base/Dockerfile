@@ -9,8 +9,8 @@ ENV RUN_USER=www \
     MCRYPT_VERSION=2.6.8 \
     JEMALLOC_VERSION=5.0.1
 
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y ca-certificates wget gcc g++ make cmake autoconf patch bzip2 psmisc pkg-config sendmail openssl libssl-dev curl libcurl4-openssl-dev libxslt-dev libicu-dev libxml2 libxml2-dev libjpeg-dev libpng12-dev libpng3 libfreetype6 libfreetype6-dev libsasl2-dev libevent-dev && \
+RUN  apt-get update &&  apt-get upgrade -y && \
+    apt-get install -y ca-certificates wget gcc g++ make cmake autoconf patch bzip2 psmisc pkg-config sendmail openssl libssl-dev curl libcurl4-openssl-dev libxslt-dev libicu-dev libxml2 libxml2-dev libjpeg-dev libpng-dev libfreetype6 libfreetype6-dev libsasl2-dev libevent-dev && \
     rm -rf /var/lib/apt/lists/*
 RUN useradd -M -s /sbin/nologin ${RUN_USER}
 
