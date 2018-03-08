@@ -63,8 +63,8 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
 RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBMEMCACHED_VERSION/+download/libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     tar xzf libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     cd libmemcached-$LIBMEMCACHED_VERSION && \
+   # $PHP_INSTALL_DIR/bin/phpize && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
-     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure && \
     make && make install && \
     cd .. && \
