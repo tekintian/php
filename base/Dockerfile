@@ -17,10 +17,10 @@ RUN useradd -M -s /sbin/nologin ${RUN_USER}
 WORKDIR /tmp
 
 # install libiconv
-ADD ./libiconv-glibc-2.16.patch /tmp/libiconv-glibc-2.16.patch
+#ADD ./libiconv-glibc-2.16.patch /tmp/libiconv-glibc-2.16.patch
 RUN wget -c --no-check-certificate http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz && \
     tar xzf libiconv-${LIBICONV_VERSION}.tar.gz && \
-    patch -d libiconv-${LIBICONV_VERSION} -p0 < libiconv-glibc-2.16.patch && \
+  #  patch -d libiconv-${LIBICONV_VERSION} -p0 < libiconv-glibc-2.16.patch && \
     cd libiconv-${LIBICONV_VERSION} && \
     ./configure --prefix=/usr/local && \
     make && make install && \
