@@ -3,10 +3,10 @@ MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=7.1.15 \
-    IMAGICK_PECL_VERSION=3.4.3RC1 \
-    LIBMEMCACHED_VERSION=1.0.18 \
-    REDIS_PECL_VERSION=3.1.0 \
-    SWOOLE_VERSION=1.9.3 \
+    IMAGICK_PECL_VERSION=3.4.3 \
+    LIBMEMCACHED_VERSION=1.0.19 \
+    REDIS_PECL_VERSION=3.1.6 \
+    SWOOLE_VERSION=2.1.1 \
     OAUTH_PECL_VERSION=2.0.2 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 

@@ -3,10 +3,11 @@ MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=7.2.3 \
-    IMAGICK_PECL_VERSION=3.4.3RC1 \
-    LIBMEMCACHED_VERSION=1.0.18 \
-    REDIS_PECL_VERSION=3.1.0 \
-    SWOOLE_VERSION=1.9.3 \
+    IMAGICK_PECL_VERSION=3.4.3 \
+    LIBMEMCACHED_VERSION=1.0.19 \
+    MEMCACHE_PECL_VERSION=3.0.8 \
+    REDIS_PECL_VERSION=3.1.6 \
+    SWOOLE_VERSION=2.1.1 \
     OAUTH_PECL_VERSION=2.0.2 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
@@ -55,14 +56,15 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
 # install php-memcache
 # git clone https://github.com/websupport-sk/pecl-memcache.git
 # cd pecl-memcache
-RUN wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/pecl-memcache-php7.tgz && \
-    tar xzf pecl-memcache-php7.tgz && \
-    cd pecl-memcache-php7 && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/memcache-$MEMCACHE_PECL_VERSION.tgz && \
+    tar xzf memcache-$MEMCACHE_PECL_VERSION.tgz && \
+    cd memcache-$MEMCACHE_PECL_VERSION && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
     echo "extension=memcache.so" > $PHP_INSTALL_DIR/etc/php.d/ext-memcache.ini && \
     rm -rf /tmp/*
+
 
 # install php-memcached
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git

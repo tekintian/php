@@ -55,9 +55,10 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
 # install php-memcache
 # git clone https://github.com/websupport-sk/pecl-memcache.git
 # cd pecl-memcache
-RUN wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/pecl-memcache-php7.tgz && \
-    tar xzf pecl-memcache-php7.tgz && \
-    cd pecl-memcache-php7 && \
+# libevent-dev
+RUN wget -c --no-check-certificate https://memcached.org/files/memcached-1.5.6.tar.gz && \
+    tar xzf memcached-1.5.6.tar.gz && \
+    cd memcached-1.5.6 && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
