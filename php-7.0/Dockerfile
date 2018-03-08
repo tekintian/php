@@ -90,7 +90,8 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-$REDIS_PECL_VER
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
+RUN apt-get update && apt-get install libpcre3 libpcre3-dev && \
+   wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
     tar xzf oauth-2.0.2.tgz && \
     cd oauth-2.0.2 && \
     $PHP_INSTALL_DIR/bin/phpize && \
