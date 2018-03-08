@@ -3,10 +3,10 @@ MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=7.0.28 \
-    IMAGICK_PECL_VERSION=3.4.3RC1 \
-    LIBMEMCACHED_VERSION=1.0.18 \
-    REDIS_PECL_VERSION=3.1.0 \
-    SWOOLE_VERSION=1.9.3 \
+    IMAGICK_PECL_VERSION=3.4.3 \
+    LIBMEMCACHED_VERSION=1.0.19 \
+    REDIS_PECL_VERSION=3.1.6 \
+    SWOOLE_VERSION=2.1.1 \
     OAUTH_PECL_VERSION=2.0.2 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
@@ -56,14 +56,6 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
 # git clone https://github.com/websupport-sk/pecl-memcache.git
 # cd pecl-memcache
 # libevent-dev
-RUN wget -c --no-check-certificate https://memcached.org/files/memcached-1.5.6.tar.gz && \
-    tar xzf memcached-1.5.6.tar.gz && \
-    cd memcached-1.5.6 && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
-    make && make install && \
-    echo "extension=memcache.so" > $PHP_INSTALL_DIR/etc/php.d/ext-memcache.ini && \
-    rm -rf /tmp/*
 
 # install php-memcached
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
@@ -72,12 +64,13 @@ RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBME
     tar xzf libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     cd libmemcached-$LIBMEMCACHED_VERSION && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
+     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure && \
     make && make install && \
     cd .. && \
-    wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/php-memcached-php7.tgz && \
-    tar xzf php-memcached-php7.tgz && \
-    cd php-memcached-php7 && \
+    wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/master.zip && \
+    unzip php-memcached-master.zip && \
+    cd php-memcached-master && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \

@@ -9,6 +9,7 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     REDIS_PECL_VERSION=3.1.6 \
     SWOOLE_VERSION=2.1.1 \
     OAUTH_PECL_VERSION=2.0.2 \
+    SPHINX_PECL_VERSION=1.3.3 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
 WORKDIR /tmp
@@ -105,6 +106,23 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
     echo "extension=oauth.so" > $PHP_INSTALL_DIR/etc/php.d/ext-oauth.ini && \
+    rm -rf /tmp/*
+#http://pecl.php.net/package/sphinx/1.3.3
+#$PREFIX
+RUN wget -c --no-check-certificate http://pecl.php.net/get/sphinx-$SPHINX_PECL_VERSION.tgz && \
+    tar xzf sphinx-$SPHINX_PECL_VERSION.tgz && \
+    cd sphinx-$SPHINX_PECL_VERSION && \
+    $PHP_INSTALL_DIR/bin/phpize && \
+    ./configure --with-sphinx=$PHP_INSTALL_DIR/bin/php-config && \
+    make && make install && \
+    rm -rf /tmp/*
+#http://pecl.php.net/get/solr-2.4.0.tgz
+RUN wget -c --no-check-certificate http://pecl.php.net/get/solr-2.4.0.tgz && \
+    tar xzf solr-2.4.0.tgz && \
+    cd solr-2.4.0 && \
+    $PHP_INSTALL_DIR/bin/phpize && \
+    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
+    make && make install && \
     rm -rf /tmp/*
 
 # install swoole
