@@ -68,8 +68,8 @@ RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBME
     ./configure && \
     make && make install && \
     cd .. && \
-    wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/master.zip && \
-    unzip php-memcached-master.zip && \
+    wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/php-memcached-master.tar.gz && \
+    tar xzf php-memcached-master.tar.gz && \
     cd php-memcached-master && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
