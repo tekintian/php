@@ -64,7 +64,7 @@ RUN wget -c --no-check-certificate http://downloads.sourceforge.net/project/mcry
     rm -rf /tmp/*
 
 # install jemalloc
-# �鿴jemalloc״̬  lsof -n | grep jemalloc
+# 查看jemalloc状态  lsof -n | grep jemalloc
 RUN wget -c --no-check-certificate https://github.com/jemalloc/jemalloc/releases/download/${JEMALLOC_VERSION}/jemalloc-${JEMALLOC_VERSION}.tar.bz2 && \
     tar xjf jemalloc-${JEMALLOC_VERSION}.tar.bz2 && \
     cd jemalloc-${JEMALLOC_VERSION} && \

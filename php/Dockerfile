@@ -2,11 +2,12 @@ FROM tekintian/base:latest
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
-    PHP_VERSION=7.1.0 \
-    IMAGICK_PECL_VERSION=3.4.3RC1 \
+    PHP_VERSION=7.0.28 \
+    IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
-    REDIS_PECL_VERSION=3.1.0 \
-    SWOOLE_VERSION=1.9.3 \
+    REDIS_PECL_VERSION=3.1.6 \
+    SWOOLE_VERSION=2.1.1 \
+    OAUTH_PECL_VERSION=2.0.2 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
 WORKDIR /tmp
@@ -54,14 +55,7 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
 # install php-memcache
 # git clone https://github.com/websupport-sk/pecl-memcache.git
 # cd pecl-memcache
-RUN wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/pecl-memcache-php7.tgz && \
-    tar xzf pecl-memcache-php7.tgz && \
-    cd pecl-memcache-php7 && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
-    make && make install && \
-    echo "extension=memcache.so" > $PHP_INSTALL_DIR/etc/php.d/ext-memcache.ini && \
-    rm -rf /tmp/*
+# libevent-dev
 
 # install php-memcached
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
@@ -69,13 +63,14 @@ RUN wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/pe
 RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBMEMCACHED_VERSION/+download/libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     tar xzf libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     cd libmemcached-$LIBMEMCACHED_VERSION && \
+   # $PHP_INSTALL_DIR/bin/phpize && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
     ./configure && \
     make && make install && \
     cd .. && \
-    wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/php-memcached-php7.tgz && \
-    tar xzf php-memcached-php7.tgz && \
-    cd php-memcached-php7 && \
+    wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/php-memcached-master.tar.gz && \
+    tar xzf php-memcached-master.tar.gz && \
+    cd php-memcached-master && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
@@ -93,10 +88,22 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-$REDIS_PECL_VER
     echo "extension=redis.so" > $PHP_INSTALL_DIR/etc/php.d/ext-redis.ini && \
     rm -rf /tmp/*
 
+# install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
+# $AUTH_PECL_VERSION
+RUN apt-get update -y && apt-get install libpcre3 libpcre3-dev -y && \
+   wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
+    tar xzf oauth-2.0.2.tgz && \
+    cd oauth-2.0.2 && \
+    $PHP_INSTALL_DIR/bin/phpize && \
+    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
+    make && make install && \
+    echo "extension=oauth.so" > $PHP_INSTALL_DIR/etc/php.d/ext-oauth.ini && \
+    rm -rf /tmp/*
+
 # install swoole
-RUN wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/v$SWOOLE_VERSION-stable.tar.gz && \
-    tar xzf v$SWOOLE_VERSION-stable.tar.gz && \
-    cd swoole-src-$SWOOLE_VERSION-stable && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-$SWOOLE_VERSION.tgz  && \
+    tar xzf swoole-$SWOOLE_VERSION.tgz && \
+    cd swoole-$SWOOLE_VERSION && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config --enable-jemalloc && \
     make && make install && \
