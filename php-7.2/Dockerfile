@@ -123,16 +123,17 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-$SWOOLE_VERSIO
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config --enable-jemalloc && \
     make && make install && \
     echo "extension=swoole.so" > $PHP_INSTALL_DIR/etc/php.d/ext-swoole.ini && \
-    rm -rf /tmp/*
+    cd .. && rm -rf /tmp/*
 #gnupg
-RUN wget -c --no-check-certificate http://pecl.php.net/get/gnupg-$GNUPG_VERSION.tgz  && \
+RUN apt-get install -y libgpgme11-dev && \
+     wget -c --no-check-certificate http://pecl.php.net/get/gnupg-$GNUPG_VERSION.tgz  && \
     tar xzf gnupg-$GNUPG_VERSION.tgz && \
-    cd gnupg-$SWOOLE_VERSION && \
+    cd gnupg-$GNUPG_VERSION && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config  && \
     make && make install && \
     echo "extension=gnupg.so" > $PHP_INSTALL_DIR/etc/php.d/ext-gnupg.ini && \
-    rm -rf /tmp/*
+    cd .. && rm -rf /tmp/*
 
 ADD ${REMOTE_PATH}/ext-opcache.ini $PHP_INSTALL_DIR/etc/php.d/ext-opcache.ini
 

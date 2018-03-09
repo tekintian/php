@@ -124,7 +124,16 @@ RUN wget  -c --no-check-certificate  https://nchc.dl.sourceforge.net/project/re2
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config  && \
     make && make install && \
     echo "extension = sphinx.so" > $PHP_INSTALL_DIR/etc/php.d/ext-sphinx.ini && \
-    rm -rf /tmp/*
+     cd .. && rm -rf /tmp/*
+#gnupg
+RUN wget -c --no-check-certificate http://pecl.php.net/get/gnupg-$GNUPG_VERSION.tgz  && \
+    tar xzf gnupg-$GNUPG_VERSION.tgz && \
+    cd gnupg-$GNUPG_VERSION && \
+    $PHP_INSTALL_DIR/bin/phpize && \
+    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config  && \
+    make && make install && \
+    echo "extension=gnupg.so" > $PHP_INSTALL_DIR/etc/php.d/ext-gnupg.ini && \
+    cd .. && rm -rf /tmp/*
 
 ADD ${REMOTE_PATH}/ext-opcache.ini $PHP_INSTALL_DIR/etc/php.d/ext-opcache.ini
 

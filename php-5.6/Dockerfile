@@ -1,4 +1,4 @@
-FROM tekintian/php:base
+FROM tekintian/base
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
@@ -6,10 +6,20 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.6 \
-    SWOOLE_VERSION=2.1.1 \
+    SWOOLE_VERSION=1.9.23 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
 WORKDIR /tmp
+
+#openssl old version install. 
+RUN wget -c --no-check-certificate https://www.openssl.org/source/openssl-1.0.2n.tar.gz && \
+    tar xzf openssl-1.0.2n.tar.gz && \
+    cd openssl-1.0.2n && \
+    ./config --prefix=/usr/local/openssl_10 && ./config -t && \
+    make && make install && \
+    ln -s /usr/local/openssl_10 /usr/local/openssl && \
+    cd .. && \
+    rm -rf /tmp/*
 
 # install php
 RUN wget -c --no-check-certificate http://www.php.net/distributions/php-$PHP_VERSION.tar.gz && \
@@ -23,7 +33,7 @@ RUN wget -c --no-check-certificate http://www.php.net/distributions/php-$PHP_VER
         --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib \
         --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-exif \
         --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local --enable-mbregex \
-        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl \
+        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl=/usr/local/openssl_10 \
         --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-ftp --enable-intl --with-xsl \
         --with-gettext --enable-zip --enable-soap --disable-debug && \
     make ZEND_EXTRA_LIBS='-liconv' && \
