@@ -1,4 +1,4 @@
-FROM tekintian/base:latest
+FROM tekintian/php:base
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
