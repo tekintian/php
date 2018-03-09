@@ -100,7 +100,7 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-$OAUTH_PECL_VER
 #http://pecl.php.net/package/sphinx/1.3.3
 #$PREFIXhttp://sphinxsearch.com/downloads/sphinx-2.2.11-release.tar.gz/thankyou.html
 
-RUN wget https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
+RUN wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
     wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
@@ -143,7 +143,7 @@ RUN chmod 777 install.sh && \
     rm -rf /tmp/*
 
 # install composer
-RUN wget https://getcomposer.org/download/1.6.3/composer.phar  && \
+RUN wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer
 

@@ -112,7 +112,7 @@ RUN chmod 777 install.sh && \
     rm -rf /tmp/*
 
 # install composer
-RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
+RUN wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer
 

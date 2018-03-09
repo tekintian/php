@@ -111,7 +111,7 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-$SWOOLE_VERSIO
     echo "extension=swoole.so" > $PHP_INSTALL_DIR/etc/php.d/ext-swoole.ini && \
     rm -rf /tmp/*
 #sphinx
-RUN wget https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
+RUN wget  -c --no-check-certificate  https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
     wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
@@ -135,7 +135,7 @@ RUN chmod 777 install.sh && \
     rm -rf /tmp/*
 
 # install composer
-RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
+RUN wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer
 
