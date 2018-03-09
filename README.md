@@ -1,7 +1,17 @@
 php for docker
 
+    PHP + ImageMagick + ZendOpcache
+    Memcache + Memcached + Redis + Swoole
 
-5.3--7.1
+    ZendGuardLoader + ionCube for php5.6
+
+## usage
+
+### php control
+start|stop|restart|reload|status
+```
+docker exec -d php service php-fpm restart
+```
 
 PHP开发交流
 http://github.com/ynphp
