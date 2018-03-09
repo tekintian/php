@@ -10,6 +10,7 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     SWOOLE_VERSION=2.1.1 \
     OAUTH_PECL_VERSION=2.0.2 \
     SPHINX_PECL_VERSION=1.3.3 \
+    GNUPG_VERSION=1.4.0 \
     REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
 
 WORKDIR /tmp
@@ -54,22 +55,11 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
     echo "extension=imagick.so" > $PHP_INSTALL_DIR/etc/php.d/ext-imagick.ini && \
     rm -rf /tmp/*
 
-# install php-memcache
-# git clone https://github.com/websupport-sk/pecl-memcache.git
-# cd pecl-memcache
-RUN wget -c --no-check-certificate http://pecl.php.net/get/memcache-$MEMCACHE_PECL_VERSION.tgz && \
-    tar xzf memcache-$MEMCACHE_PECL_VERSION.tgz && \
-    cd memcache-$MEMCACHE_PECL_VERSION && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
-    make && make install && \
-    echo "extension=memcache.so" > $PHP_INSTALL_DIR/etc/php.d/ext-memcache.ini && \
-    rm -rf /tmp/*
 
-
-# install php-memcached
+# install php-memcached-php7
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
-# cd php-memcached
+# https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz
+#
 RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBMEMCACHED_VERSION/+download/libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     tar xzf libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
     cd libmemcached-$LIBMEMCACHED_VERSION && \
@@ -77,9 +67,9 @@ RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBME
     ./configure && \
     make && make install && \
     cd .. && \
-    wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/php-memcached-master.tar.gz && \
-    tar xzf php-memcached-master.tar.gz && \
-    cd php-memcached-master && \
+    wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz -O php-memcached-php7.tar.gz && \
+    tar xzf php-memcached-php7.tar.gz && \
+    cd php-memcached-php7 && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
@@ -99,30 +89,30 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-$REDIS_PECL_VER
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
-    tar xzf oauth-2.0.2.tgz && \
-    cd oauth-2.0.2 && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/oauth-$OAUTH_PECL_VERSION.tgz && \
+    tar xzf oauth-$OAUTH_PECL_VERSION.tgz && \
+    cd oauth-$OAUTH_PECL_VERSION && \
     $PHP_INSTALL_DIR/bin/phpize && \
     ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
     make && make install && \
     echo "extension=oauth.so" > $PHP_INSTALL_DIR/etc/php.d/ext-oauth.ini && \
     rm -rf /tmp/*
 #http://pecl.php.net/package/sphinx/1.3.3
-#$PREFIX
-RUN wget -c --no-check-certificate http://pecl.php.net/get/sphinx-$SPHINX_PECL_VERSION.tgz && \
-    tar xzf sphinx-$SPHINX_PECL_VERSION.tgz && \
-    cd sphinx-$SPHINX_PECL_VERSION && \
+#$PREFIXhttp://sphinxsearch.com/downloads/sphinx-2.2.11-release.tar.gz/thankyou.html
+
+RUN wget https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
+    tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
+    ./configure && make && make install && \
+    wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
+    tar -zxvf sphinx-2.2.11-release.tar.gz && cd sphinx-2.2.11-release/api/libsphinxclient && \
+     ./configure && make && make install && \
+    wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
+    tar xzf sphinx-php7-339e123.tar.gz && \
+    cd sphinx-php7-339e123 && \
     $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-sphinx=$PHP_INSTALL_DIR/bin/php-config && \
+    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config  && \
     make && make install && \
-    rm -rf /tmp/*
-#http://pecl.php.net/get/solr-2.4.0.tgz
-RUN wget -c --no-check-certificate http://pecl.php.net/get/solr-2.4.0.tgz && \
-    tar xzf solr-2.4.0.tgz && \
-    cd solr-2.4.0 && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
-    make && make install && \
+    echo "extension = sphinx.so" > $PHP_INSTALL_DIR/etc/php.d/ext-sphinx.ini && \
     rm -rf /tmp/*
 
 # install swoole
@@ -134,6 +124,15 @@ RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-$SWOOLE_VERSIO
     make && make install && \
     echo "extension=swoole.so" > $PHP_INSTALL_DIR/etc/php.d/ext-swoole.ini && \
     rm -rf /tmp/*
+#gnupg
+RUN wget -c --no-check-certificate http://pecl.php.net/get/gnupg-$GNUPG_VERSION.tgz  && \
+    tar xzf gnupg-$GNUPG_VERSION.tgz && \
+    cd gnupg-$SWOOLE_VERSION && \
+    $PHP_INSTALL_DIR/bin/phpize && \
+    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config  && \
+    make && make install && \
+    echo "extension=gnupg.so" > $PHP_INSTALL_DIR/etc/php.d/ext-gnupg.ini && \
+    rm -rf /tmp/*
 
 ADD ${REMOTE_PATH}/ext-opcache.ini $PHP_INSTALL_DIR/etc/php.d/ext-opcache.ini
 
@@ -144,7 +143,7 @@ RUN chmod 777 install.sh && \
     rm -rf /tmp/*
 
 # install composer
-RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
+RUN wget https://getcomposer.org/download/1.6.3/composer.phar  && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer
 

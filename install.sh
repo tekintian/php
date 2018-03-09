@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+PHP_INSTALL_DIR=/usr/local/php
 
 phpExtensionDir=$(${PHP_INSTALL_DIR}/bin/php-config --extension-dir)
 
