@@ -106,9 +106,9 @@ RUN wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/
 ADD ${REMOTE_PATH}/ext-opcache.ini $PHP_INSTALL_DIR/etc/php.d/ext-opcache.ini
 
 # run install script
-ADD ${REMOTE_PATH}/install.sh /tmp/install.sh
-RUN chmod 777 install.sh && \
-    bash install.sh && \
+ADD ${REMOTE_PATH}/install_zend.sh /tmp/install_zend.sh
+RUN chmod 777 install_zend.sh && \
+    bash install_zend.sh && \
     rm -rf /tmp/*
 
 # install composer
