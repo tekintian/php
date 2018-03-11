@@ -15,11 +15,10 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
-
- #install make deps
+#install build deps
 RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev  libcurl4-openssl-dev libxslt-dev libicu-dev  libxml2-dev libjpeg-dev libpng-dev libfreetype6-dev libsasl2-dev libevent-dev libpcre3-dev libgpgme11-dev pkg-config patch && rm -rf /var/lib/apt/lists/* && \
     # install php
-    # wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
+    wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
     ./buildconf --force && \
@@ -41,13 +40,13 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     chmod +x /etc/init.d/php-fpm && \
    cd /tmp/ && \
     # install ImageMagick
-    # wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
+    wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
     tar xzf ImageMagick.tar.gz && \
     cd ImageMagick* && \
     ./configure --prefix=/usr/local/imagemagick --enable-shared --enable-static && \
     make && make install && \
     cd /tmp/ && \
-    # wget -c --no-check-certificate http://pecl.php.net/get/imagick-${IMAGICK_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/imagick-${IMAGICK_PECL_VERSION}.tgz && \
     tar xzf imagick-${IMAGICK_PECL_VERSION}.tgz && \
     cd imagick-${IMAGICK_PECL_VERSION} && \
     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig && \
@@ -61,14 +60,14 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
 # https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz
 #
-    # wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+    wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-    # wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz -O php-memcached-php7.tar.gz && \
+    wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz -O php-memcached-php7.tar.gz && \
     tar xzf php-memcached-php7.tar.gz && \
     cd php-memcached-php7 && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -79,7 +78,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     cd /tmp/ && \
 
 # install php-redis
-    # wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
     tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
     cd redis-${REDIS_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -90,7 +89,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-    # wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
     tar xzf oauth-${OAUTH_PECL_VERSION}.tgz && \
     cd oauth-${OAUTH_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -101,7 +100,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
 #http://pecl.php.net/package/sphinx/1.3.3
 #$PREFIXhttp://sphinxsearch.com/downloads/sphinx-2.2.11-release.tar.gz/thankyou.html
 
-    # wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
+    wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
     cd /tmp/ && \
@@ -109,7 +108,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     tar -zxvf sphinx-2.2.11-release.tar.gz && cd sphinx-2.2.11-release/api/libsphinxclient && \
      ./configure && make && make install && \
     cd /tmp/ && \
-    # wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
+    wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
     tar xzf sphinx-php7-339e123.tar.gz && \
     cd sphinx-php7-339e123 && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -119,7 +118,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     cd /tmp/ && \
 
 # install swoole
-    # wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
+    wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
     tar xzf swoole-${SWOOLE_VERSION}.tgz && \
     cd swoole-${SWOOLE_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -128,7 +127,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
     cd /tmp/ && \
 #gnupg
-    # wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
+    wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
     tar xzf gnupg-${GNUPG_VERSION}.tgz && \
     cd gnupg-${GNUPG_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
