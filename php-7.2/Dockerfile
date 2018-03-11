@@ -100,13 +100,11 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     echo "extension=oauth.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-oauth.ini && \
     cd /tmp/ && \
 #http://pecl.php.net/package/sphinx/1.3.3
-#$PREFIXhttp://sphinxsearch.com/downloads/sphinx-2.2.11-release.tar.gz/thankyou.html
-
     wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
     cd /tmp/ && \
-    # wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
+    wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
     tar -zxvf sphinx-2.2.11-release.tar.gz && cd sphinx-2.2.11-release/api/libsphinxclient && \
      ./configure && make && make install && \
     cd /tmp/ && \

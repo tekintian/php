@@ -104,7 +104,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
     cd /tmp/ && \
-    # wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
+    wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
     tar -zxvf sphinx-2.2.11-release.tar.gz && cd sphinx-2.2.11-release/api/libsphinxclient && \
      ./configure && make && make install && \
     cd /tmp/ && \
