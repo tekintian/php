@@ -1,4 +1,5 @@
-FROM tekintian/php:base
+FROM tekintian/docker-base:latest
+
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
@@ -8,17 +9,17 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     REDIS_PECL_VERSION=3.1.6 \
     SWOOLE_VERSION=2.1.1 \
     OAUTH_PECL_VERSION=2.0.2 \
-    REMOTE_PATH=https://github.com/tekintian/docker-php/raw/master
+    REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
 
 # install php
-RUN wget -c --no-check-certificate http://www.php.net/distributions/php-$PHP_VERSION.tar.gz && \
-    tar xzf php-$PHP_VERSION.tar.gz && \
-    cd php-$PHP_VERSION && \
+RUN wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
+    tar xzf php-${PHP_VERSION}.tar.gz && \
+    cd php-${PHP_VERSION} && \
     ./buildconf --force && \
-    ./configure --prefix=$PHP_INSTALL_DIR --with-config-file-path=$PHP_INSTALL_DIR/etc \
-        --with-config-file-scan-dir=$PHP_INSTALL_DIR/etc/php.d \
+    ./configure --prefix=${PHP_INSTALL_DIR} --with-config-file-path=${PHP_INSTALL_DIR}/etc \
+        --with-config-file-scan-dir=${PHP_INSTALL_DIR}/etc/php.d \
         --with-fpm-user=$RUN_USER --with-fpm-group=$RUN_USER --enable-fpm --enable-opcache \
         --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd \
         --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib \
@@ -29,8 +30,8 @@ RUN wget -c --no-check-certificate http://www.php.net/distributions/php-$PHP_VER
         --with-gettext --enable-zip --enable-soap --disable-debug && \
     make ZEND_EXTRA_LIBS='-liconv' && \
     make install && \
-    mkdir -p $PHP_INSTALL_DIR/etc/php.d && \
-    /bin/cp php.ini-production $PHP_INSTALL_DIR/etc/php.ini && \
+    mkdir -p ${PHP_INSTALL_DIR}/etc/php.d && \
+    /bin/cp php.ini-production ${PHP_INSTALL_DIR}/etc/php.ini && \
     /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
     chmod +x /etc/init.d/php-fpm && \
     rm -rf /tmp/*
@@ -41,15 +42,15 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
     cd ImageMagick* && \
     ./configure --prefix=/usr/local/imagemagick --enable-shared --enable-static && \
     make && make install && \
-    cd .. && \
-    wget -c --no-check-certificate http://pecl.php.net/get/imagick-$IMAGICK_PECL_VERSION.tgz && \
-    tar xzf imagick-$IMAGICK_PECL_VERSION.tgz && \
-    cd imagick-$IMAGICK_PECL_VERSION && \
+    cd /tmp/ && \
+    wget -c --no-check-certificate http://pecl.php.net/get/imagick-${IMAGICK_PECL_VERSION}.tgz && \
+    tar xzf imagick-${IMAGICK_PECL_VERSION}.tgz && \
+    cd imagick-${IMAGICK_PECL_VERSION} && \
     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config --with-imagick=/usr/local/imagemagick && \
+    ${PHP_INSTALL_DIR}/bin/phpize && \
+    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --with-imagick=/usr/local/imagemagick && \
     make && make install && \
-    echo "extension=imagick.so" > $PHP_INSTALL_DIR/etc/php.d/ext-imagick.ini && \
+    echo "extension=imagick.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-imagick.ini && \
     rm -rf /tmp/*
 
 # install php-memcache
@@ -60,32 +61,32 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
 # install php-memcached
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
 # cd php-memcached
-RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/$LIBMEMCACHED_VERSION/+download/libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
-    tar xzf libmemcached-$LIBMEMCACHED_VERSION.tar.gz && \
-    cd libmemcached-$LIBMEMCACHED_VERSION && \
-   # $PHP_INSTALL_DIR/bin/phpize && \
+RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+    tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+    cd libmemcached-${LIBMEMCACHED_VERSION} && \
+   # ${PHP_INSTALL_DIR}/bin/phpize && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
     ./configure && \
     make && make install && \
-    cd .. && \
+    cd /tmp/ && \
     wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/php-memcached-master.tar.gz && \
     tar xzf php-memcached-master.tar.gz && \
     cd php-memcached-master && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
+    ${PHP_INSTALL_DIR}/bin/phpize && \
+    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
-    echo "extension=memcached.so" >> $PHP_INSTALL_DIR/etc/php.d/ext-memcached.ini && \
-    echo "memcached.use_sasl=1" >> $PHP_INSTALL_DIR/etc/php.d/ext-memcached.ini && \
+    echo "extension=memcached.so" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
+    echo "memcached.use_sasl=1" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     rm -rf /tmp/*
 
 # install php-redis
-RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-$REDIS_PECL_VERSION.tgz && \
-    tar xzf redis-$REDIS_PECL_VERSION.tgz && \
-    cd redis-$REDIS_PECL_VERSION && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
+    tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
+    cd redis-${REDIS_PECL_VERSION} && \
+    ${PHP_INSTALL_DIR}/bin/phpize && \
+    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
-    echo "extension=redis.so" > $PHP_INSTALL_DIR/etc/php.d/ext-redis.ini && \
+    echo "extension=redis.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-redis.ini && \
     rm -rf /tmp/*
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
@@ -94,37 +95,37 @@ RUN apt-get update -y && apt-get install libpcre3 libpcre3-dev -y && \
    wget -c --no-check-certificate http://pecl.php.net/get/oauth-2.0.2.tgz && \
     tar xzf oauth-2.0.2.tgz && \
     cd oauth-2.0.2 && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config && \
+    ${PHP_INSTALL_DIR}/bin/phpize && \
+    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
-    echo "extension=oauth.so" > $PHP_INSTALL_DIR/etc/php.d/ext-oauth.ini && \
+    echo "extension=oauth.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-oauth.ini && \
     rm -rf /tmp/*
 
 # install swoole
-RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-$SWOOLE_VERSION.tgz  && \
-    tar xzf swoole-$SWOOLE_VERSION.tgz && \
-    cd swoole-$SWOOLE_VERSION && \
-    $PHP_INSTALL_DIR/bin/phpize && \
-    ./configure --with-php-config=$PHP_INSTALL_DIR/bin/php-config --enable-jemalloc && \
+RUN wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
+    tar xzf swoole-${SWOOLE_VERSION}.tgz && \
+    cd swoole-${SWOOLE_VERSION} && \
+    ${PHP_INSTALL_DIR}/bin/phpize && \
+    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --enable-jemalloc && \
     make && make install && \
-    echo "extension=swoole.so" > $PHP_INSTALL_DIR/etc/php.d/ext-swoole.ini && \
+    echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
     rm -rf /tmp/*
 
-ADD ${REMOTE_PATH}/ext-opcache.ini $PHP_INSTALL_DIR/etc/php.d/ext-opcache.ini
+ADD ${REMOTE_SRC_PATH}/ext-opcache.ini ${PHP_INSTALL_DIR}/etc/php.d/ext-opcache.ini
 
 # run install script
-ADD ${REMOTE_PATH}/install.sh /tmp/install.sh
+ADD ${REMOTE_SRC_PATH}/install.sh /tmp/install.sh
 RUN chmod 777 install.sh && \
     bash install.sh && \
     rm -rf /tmp/*
 
 # install composer
-RUN curl -sS https://getcomposer.org/installer | $PHP_INSTALL_DIR/bin/php && \
+RUN curl -sS https://getcomposer.org/installer | ${PHP_INSTALL_DIR}/bin/php && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer
 
 # Set the entrypoint script.
-ADD $REMOTE_PATH/entrypoint.sh /entrypoint.sh
+ADD ${REMOTE_SRC_PATH}/entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
