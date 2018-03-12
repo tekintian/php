@@ -100,7 +100,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     echo "extension=oauth.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-oauth.ini && \
     cd /tmp/ && \
 #http://pecl.php.net/package/sphinx/1.3.3
-    wget -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
+    wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
     cd /tmp/ && \
@@ -134,10 +134,14 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config  && \
     make && make install && \
     echo "extension=gnupg.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-gnupg.ini && \
+    cd /tmp/ && \
+# install composer
+    wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
+    mv composer.phar /usr/local/bin/composer && \
+    chmod a+x /usr/local/bin/composer && \
     cd /tmp/ && rm -rf /tmp/* && \
-    #remove build deps
+#remove build deps
     apt-get purge -y --auto-remove gcc g++ make cmake autoconf libssl-dev  libcurl4-openssl-dev libxslt-dev libicu-dev  libxml2-dev libjpeg-dev libpng-dev libfreetype6-dev libsasl2-dev libevent-dev  libpcre3-dev libgpgme11-dev pkg-config patch libgpgme11-dev
-
 
 ADD ${REMOTE_SRC_PATH}/ext-opcache.ini ${PHP_INSTALL_DIR}/etc/php.d/ext-opcache.ini
 
@@ -147,14 +151,9 @@ RUN cd /tmp/ && chmod 777 install.sh && \
     bash install.sh && \
     rm -rf /tmp/*
 
-# install composer
-RUN wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
-    mv composer.phar /usr/local/bin/composer && \
-    chmod a+x /usr/local/bin/composer && \
-    apt-get purge -y --auto-remove wget 
-
 # Set the entrypoint script.
-ADD ${REMOTE_SRC_PATH}/entrypoint.sh /entrypoint.sh
+# ADD ${REMOTE_SRC_PATH}/entrypoint.sh /entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

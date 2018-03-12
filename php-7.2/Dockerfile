@@ -153,6 +153,7 @@ RUN cd /tmp/ && chmod 777 install.sh && \
 
 # Set the entrypoint script.
 ADD ${REMOTE_SRC_PATH}/entrypoint.sh /entrypoint.sh
+# ADD entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
