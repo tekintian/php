@@ -18,7 +18,29 @@ WORKDIR /tmp
 #增加src文件
 # ADD src/ /tmp/
 #install build deps
-RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev  libcurl4-openssl-dev libxslt-dev libicu-dev  libxml2-dev libjpeg-dev libpng-dev libfreetype6-dev libsasl2-dev libevent-dev libpcre3-dev libgpgme11-dev pkg-config patch && rm -rf /var/lib/apt/lists/* && \
+RUN  buildDeps='\
+                gcc \
+                g++ \
+                make \
+                cmake \
+                autoconf \
+                libssl-dev \
+                libcurl4-openssl-dev \
+                libxslt-dev \
+                libicu-dev \
+                libxml2-dev \
+                libjpeg-dev \
+                libpng-dev \
+                libfreetype6-dev \
+                libsasl2-dev \
+                libevent-dev \
+                libpcre3-dev \
+                libgpgme11-dev \
+                pkg-config \
+                patch \
+                libgpgme11-dev \
+                --no-install-recommends ' \
+        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/* \
     # install php
     wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
@@ -141,7 +163,7 @@ RUN  apt-get update && apt-get install -y gcc g++ make cmake autoconf libssl-dev
     chmod a+x /usr/local/bin/composer && \
     cd /tmp/ && rm -rf /tmp/* && \
 #remove build deps
-    apt-get purge -y --auto-remove gcc g++ make cmake autoconf libssl-dev  libcurl4-openssl-dev libxslt-dev libicu-dev  libxml2-dev libjpeg-dev libpng-dev libfreetype6-dev libsasl2-dev libevent-dev  libpcre3-dev libgpgme11-dev pkg-config patch libgpgme11-dev
+    apt-get purge -y --auto-remove ${buildDeps}
 
 ADD ${REMOTE_SRC_PATH}/ext-opcache.ini ${PHP_INSTALL_DIR}/etc/php.d/ext-opcache.ini
 
