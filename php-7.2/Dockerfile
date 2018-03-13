@@ -41,7 +41,7 @@ RUN  buildDeps='\
                 --no-install-recommends ' \
         && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
     # install php
-     wget -c --no-check-certificatehttp://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
+   wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
     ./buildconf --force && \
@@ -83,14 +83,14 @@ RUN  buildDeps='\
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
 # https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz
 #
-     wget -c --no-check-certificatehttps://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+     wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-     wget -c --no-check-certificatehttps://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz -O php-memcached-php7.tar.gz && \
+     wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz -O php-memcached-php7.tar.gz && \
     tar xzf php-memcached-php7.tar.gz && \
     cd php-memcached-php7 && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -101,7 +101,7 @@ RUN  buildDeps='\
     cd /tmp/ && \
 
 # install php-redis
-     wget -c --no-check-certificatehttp://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
+     wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
     tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
     cd redis-${REDIS_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -112,7 +112,7 @@ RUN  buildDeps='\
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-     wget -c --no-check-certificatehttp://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
+     wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
     tar xzf oauth-${OAUTH_PECL_VERSION}.tgz && \
     cd oauth-${OAUTH_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -129,7 +129,7 @@ RUN  buildDeps='\
     tar -zxvf sphinx-2.2.11-release.tar.gz && cd sphinx-2.2.11-release/api/libsphinxclient && \
      ./configure && make && make install && \
     cd /tmp/ && \
-     wget -c --no-check-certificatehttps://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
+     wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
     tar xzf sphinx-php7-339e123.tar.gz && \
     cd sphinx-php7-339e123 && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -139,7 +139,7 @@ RUN  buildDeps='\
     cd /tmp/ && \
 
 # install swoole
-     wget -c --no-check-certificatehttp://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
+     wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
     tar xzf swoole-${SWOOLE_VERSION}.tgz && \
     cd swoole-${SWOOLE_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -148,7 +148,7 @@ RUN  buildDeps='\
     echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
     cd /tmp/ && \
 #gnupg
-     wget -c --no-check-certificatehttp://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
+     wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
     tar xzf gnupg-${GNUPG_VERSION}.tgz && \
     cd gnupg-${GNUPG_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -157,7 +157,7 @@ RUN  buildDeps='\
     echo "extension=gnupg.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-gnupg.ini && \
     cd /tmp/ && \
 # install composer
-     wget -c --no-check-certificatehttps://getcomposer.org/composer.phar && \
+     wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer && \
     cd /tmp/ && rm -rf /tmp/* && \
