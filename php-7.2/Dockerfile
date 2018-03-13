@@ -16,7 +16,7 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
 
 WORKDIR /tmp
 #增加src文件
-ADD src/ /tmp/
+#ADD src/ /tmp/
 #install build deps
 RUN  buildDeps='\
                 gcc \
