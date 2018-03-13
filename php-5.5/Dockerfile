@@ -12,7 +12,29 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
 WORKDIR /tmp
 
 # install php
-RUN wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
+RUN buildDeps='\
+                gcc \
+                g++ \
+                make \
+                cmake \
+                autoconf \
+                libssl-dev \
+                libcurl4-openssl-dev \
+                libxslt-dev \
+                libicu-dev \
+                libxml2-dev \
+                libjpeg-dev \
+                libpng-dev \
+                libfreetype6-dev \
+                libsasl2-dev \
+                libevent-dev \
+                libpcre3-dev \
+                libgpgme11-dev \
+                pkg-config \
+                patch \
+                --no-install-recommends ' \
+        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+    wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
     ./buildconf --force && \
@@ -32,10 +54,9 @@ RUN wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VE
     /bin/cp php.ini-production ${PHP_INSTALL_DIR}/etc/php.ini && \
     /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
     chmod +x /etc/init.d/php-fpm && \
-    rm -rf /tmp/*
-
+  
 # install ImageMagick
-RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
+    wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
     tar xzf ImageMagick.tar.gz && \
     cd ImageMagick* && \
     ./configure --prefix=/usr/local/imagemagick --enable-shared --enable-static && \
@@ -49,24 +70,21 @@ RUN wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagi
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --with-imagick=/usr/local/imagemagick && \
     make && make install && \
     echo "extension=imagick.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-imagick.ini && \
-    rm -rf /tmp/*
-
+ 
 # install php-memcache
 # git clone https://github.com/websupport-sk/pecl-memcache.git
 # cd pecl-memcache
-RUN wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/memcache-2.2.7.tgz && \
+    wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/memcache-2.2.7.tgz && \
     tar xzf memcache-2.2.7.tgz && \
     cd memcache-2.2.7 && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
     echo "extension=memcache.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-memcache.ini && \
-    rm -rf /tmp/*
-
 # install php-memcached
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
 # cd php-memcached
-RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+    wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
@@ -81,27 +99,26 @@ RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBM
     make && make install && \
     echo "extension=memcached.so" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     echo "memcached.use_sasl=1" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
-    rm -rf /tmp/*
-
+   
 # install php-redis
-RUN wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
     tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
     cd redis-${REDIS_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
     echo "extension=redis.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-redis.ini && \
-    rm -rf /tmp/*
-
 # install swoole
-RUN wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}-stable.tar.gz && \
+    wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}-stable.tar.gz && \
     tar xzf v${SWOOLE_VERSION}-stable.tar.gz && \
     cd swoole-src-${SWOOLE_VERSION}-stable && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --enable-jemalloc && \
     make && make install && \
     echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
-    rm -rf /tmp/*
+    cd /tmp/ && rm -rf /tmp/* && \
+#remove build deps
+    apt-get purge -y --auto-remove ${buildDeps}
 
 ADD ${REMOTE_SRC_PATH}/ext-opcache.ini ${PHP_INSTALL_DIR}/etc/php.d/ext-opcache.ini
 

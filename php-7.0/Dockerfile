@@ -36,9 +36,8 @@ RUN  buildDeps='\
                 libgpgme11-dev \
                 pkg-config \
                 patch \
-                libgpgme11-dev \
                 --no-install-recommends ' \
-        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/* \
+        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/* && \
     # install php
     wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \

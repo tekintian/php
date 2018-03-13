@@ -14,7 +14,7 @@ WORKDIR /tmp
 
 #install build deps
 RUN  buildDeps='\
-                gcc \
+               gcc \
                 g++ \
                 make \
                 cmake \
@@ -33,9 +33,8 @@ RUN  buildDeps='\
                 libgpgme11-dev \
                 pkg-config \
                 patch \
-                libgpgme11-dev \
                 --no-install-recommends ' \
-        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/* \
+        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
 #openssl old version install. 
     wget -c --no-check-certificate https://www.openssl.org/source/openssl-1.0.2n.tar.gz && \
     tar xzf openssl-1.0.2n.tar.gz && \
