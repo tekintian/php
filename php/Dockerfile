@@ -93,9 +93,9 @@ RUN  tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-     #wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz -O php-memcached-php7.tar.gz && \
-    tar xzf php-memcached-php7.tar.gz && \
-    cd php-memcached-php7 && \
+     #wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/master.tar.gz -O php-memcached-master.tar.gz && \
+    tar xzf php-memcached-master.tar.gz && \
+    cd php-memcached-master && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
