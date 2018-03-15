@@ -1,4 +1,4 @@
-FROM tekintian/docker-base:latest
+FROM tekintian/docker-base:1.1
 
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
@@ -15,7 +15,7 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
-ADD src/ /tmp/
+# ADD src/ /tmp/
 #install build deps
 RUN  buildDeps='\
                 gcc \
@@ -43,9 +43,8 @@ RUN  buildDeps='\
                 libzip-dev \
                 --no-install-recommends ' \
         && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
-   # install php
-   # #wget -c --no-check-certificate https://github.com/php/php-src/archinve/${PHP_VERSION}.tar.gz && \
-
+   # install latest php from php git src
+   wget -c --no-check-certificate https://github.com/php/php-src/archinve/${PHP_VERSION}.tar.gz && \
     tar xzf php-src-${PHP_VERSION}.tar.gz && \
     cd php-src-${PHP_VERSION} && \
     ./buildconf --force && \
@@ -67,13 +66,13 @@ RUN  buildDeps='\
     chmod +x /etc/init.d/php-fpm && \
    cd /tmp/ && \
     # install ImageMagick
-    # #wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
+    wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
     tar xzf ImageMagick.tar.gz && \
     cd ImageMagick* && \
     ./configure --prefix=/usr/local/imagemagick --enable-shared --enable-static && \
     make && make install && \
     cd /tmp/ && \
-    #wget -c --no-check-certificate http://pecl.php.net/get/imagick-${IMAGICK_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/imagick-${IMAGICK_PECL_VERSION}.tgz && \
     tar xzf imagick-${IMAGICK_PECL_VERSION}.tgz && \
     cd imagick-${IMAGICK_PECL_VERSION} && \
     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig && \
@@ -83,17 +82,15 @@ RUN  buildDeps='\
     echo "extension=imagick.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-imagick.ini && \
    cd /tmp/ && \
 
-# install php-memcached-php7
-# git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
-# https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz
-#
-     # #wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+# install libmemcached
+    wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-     #wget -c --no-check-certificate ${REMOTE_SRC_PATH}/php/src/php-memcached-master-bfixed.tar.gz -O php-memcached-master-bfixed.tar.gz && \
+# php-memcached with php-7.3-dev supported fixed By Tekin
+    wget -c --no-check-certificate ${REMOTE_SRC_PATH}/php/src/php-memcached-master-bfixed.tar.gz -O php-memcached-master-bfixed.tar.gz && \
     tar xzf php-memcached-master-bfixed.tar.gz && \
     cd php-memcached-master && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -104,7 +101,7 @@ RUN  buildDeps='\
     cd /tmp/ && \
 
 # install php-redis
-    #wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
     tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
     cd redis-${REDIS_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -115,7 +112,7 @@ RUN  buildDeps='\
 
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
-     #wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
+    wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
     tar xzf oauth-${OAUTH_PECL_VERSION}.tgz && \
     cd oauth-${OAUTH_PECL_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -132,7 +129,8 @@ RUN  buildDeps='\
     tar -zxvf sphinx-2.2.11-release.tar.gz && cd sphinx-2.2.11-release/api/libsphinxclient && \
      ./configure && make && make install && \
     cd /tmp/ && \
-     #wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
+# sphinx-php7
+    wget -c --no-check-certificate https://github.com/tekintian/php/raw/master/src/sphinx-php7-339e123.tar.gz -O sphinx-php7-339e123.tar.gz && \
     tar xzf sphinx-php7-339e123.tar.gz && \
     cd sphinx-php7-339e123 && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -141,7 +139,7 @@ RUN  buildDeps='\
     echo "extension = sphinx.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-sphinx.ini && \
     cd /tmp/ && \
 
-# install swoole
+# install swoole 暂时不支持PHP7.3
      #wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
     # tar xzf swoole-${SWOOLE_VERSION}.tgz && \
     # cd swoole-${SWOOLE_VERSION} && \
@@ -151,7 +149,7 @@ RUN  buildDeps='\
     # echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
     # cd /tmp/ && \
 #gnupg
-     #wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
+    wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
     tar xzf gnupg-${GNUPG_VERSION}.tgz && \
     cd gnupg-${GNUPG_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
@@ -160,7 +158,7 @@ RUN  buildDeps='\
     echo "extension=gnupg.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-gnupg.ini && \
     cd /tmp/ && \
 # install composer
-     #wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
+    wget -c --no-check-certificate https://getcomposer.org/composer.phar && \
     mv composer.phar /usr/local/bin/composer && \
     chmod a+x /usr/local/bin/composer && \
     cd /tmp/ && rm -rf /tmp/* && \
