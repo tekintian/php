@@ -23,6 +23,13 @@ http://dev.yunnan.ws
 
 
 
+
+
+&& addgroup -S nginx \
+&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+
+
+
 PHP_VERSION=7.2.3 \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
@@ -70,4 +77,59 @@ RUN set -x \
         # && { find /usr/local/mysql -type f -executable -exec strip --strip-all '{}' + || true; } \
         # && apt-get purge -y --auto-remove binutils \
         # && sed -i 's/mirrors.aliyun.com/deb.debian.org/g' /etc/apt/sources.list
+
+
+
+# Httpd Build
+
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libapr1 \
+        libaprutil1 \
+        libaprutil1-ldap \
+        libapr1-dev \
+        libaprutil1-dev \
+        liblua5.2-0 \
+        libnghttp2-14=$NGHTTP2_VERSION \
+        libpcre++0 \
+        libssl1.0.0=$OPENSSL_VERSION \
+        libxml2 \
+    && rm -r /var/lib/apt/lists/*
+
+
+***
+
+    buildDeps=" \
+            bzip2 \
+            ca-certificates \
+            dpkg-dev \
+            gcc \
+            liblua5.2-dev \
+            libnghttp2-dev=$NGHTTP2_VERSION \
+            libpcre++-dev \
+            libssl-dev=$OPENSSL_VERSION \
+            libxml2-dev \
+            zlib1g-dev \
+            make \
+            wget \
+        "; \
+        apt-get update; \
+        apt-get install -y --no-install-recommends -V $buildDeps; \
+        rm -r /var/lib/apt/lists/*; \
+
+
+    coding..........
+
+
+    apt-get purge -y --auto-remove $buildDeps
+
+
+
+
+
+
+
+
+
 
