@@ -42,11 +42,11 @@ RUN  buildDeps='\
                 bison \
                 libzip-dev \
                 --no-install-recommends ' \
-        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  
+        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
    # install php
    # #wget -c --no-check-certificate https://github.com/php/php-src/archinve/${PHP_VERSION}.tar.gz && \
 
-RUN  tar xzf php-src-${PHP_VERSION}.tar.gz && \
+    tar xzf php-src-${PHP_VERSION}.tar.gz && \
     cd php-src-${PHP_VERSION} && \
     ./buildconf --force && \
     ./configure --prefix=${PHP_INSTALL_DIR} --with-config-file-path=${PHP_INSTALL_DIR}/etc \
@@ -65,10 +65,10 @@ RUN  tar xzf php-src-${PHP_VERSION}.tar.gz && \
     /bin/cp php.ini-production ${PHP_INSTALL_DIR}/etc/php.ini && \
     /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
     chmod +x /etc/init.d/php-fpm && \
-   cd /tmp/ 
+   cd /tmp/ && \
     # install ImageMagick
     # #wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
-RUN  tar xzf ImageMagick.tar.gz && \
+    tar xzf ImageMagick.tar.gz && \
     cd ImageMagick* && \
     ./configure --prefix=/usr/local/imagemagick --enable-shared --enable-static && \
     make && make install && \
@@ -81,20 +81,20 @@ RUN  tar xzf ImageMagick.tar.gz && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --with-imagick=/usr/local/imagemagick && \
     make && make install && \
     echo "extension=imagick.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-imagick.ini && \
-   cd /tmp/ 
+   cd /tmp/ && \
 
 # install php-memcached-php7
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
 # https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz
 #
      # #wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
-RUN  tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+    tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-     #wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/master.tar.gz -O php-memcached-master.tar.gz && \
-    tar xzf php-memcached-master.tar.gz && \
+     #wget -c --no-check-certificate ${REMOTE_SRC_PATH}/php/src/php-memcached-master-bfixed.tar.gz -O php-memcached-master-bfixed.tar.gz && \
+    tar xzf php-memcached-master-bfixed.tar.gz && \
     cd php-memcached-master && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
@@ -143,13 +143,13 @@ RUN  tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
 
 # install swoole
      #wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
-    tar xzf swoole-${SWOOLE_VERSION}.tgz && \
-    cd swoole-${SWOOLE_VERSION} && \
-    ${PHP_INSTALL_DIR}/bin/phpize && \
-    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --enable-jemalloc && \
-    make && make install && \
-    echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
-    cd /tmp/ && \
+    # tar xzf swoole-${SWOOLE_VERSION}.tgz && \
+    # cd swoole-${SWOOLE_VERSION} && \
+    # ${PHP_INSTALL_DIR}/bin/phpize && \
+    # ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --enable-jemalloc && \
+    # make && make install && \
+    # echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
+    # cd /tmp/ && \
 #gnupg
      #wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
     tar xzf gnupg-${GNUPG_VERSION}.tgz && \
