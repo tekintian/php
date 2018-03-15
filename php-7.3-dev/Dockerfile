@@ -44,7 +44,7 @@ RUN  buildDeps='\
                 --no-install-recommends ' \
         && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
    # install latest php from php git src
-   wget -c --no-check-certificate https://github.com/php/php-src/archinve/${PHP_VERSION}.tar.gz && \
+   wget -c --no-check-certificate https://github.com/php/php-src/archive/${PHP_VERSION}.tar.gz && \
     tar xzf php-src-${PHP_VERSION}.tar.gz && \
     cd php-src-${PHP_VERSION} && \
     ./buildconf --force && \
