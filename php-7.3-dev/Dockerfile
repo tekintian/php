@@ -15,36 +15,36 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
+
 # ADD src/ /tmp/
 #install build deps
 RUN  buildDeps='\
-                gcc \
-                g++ \
-                make \
-                cmake \
-                autoconf \
-                libssl-dev \
-                libcurl4-openssl-dev \
-                libxslt-dev \
-                libicu-dev \
-                libxml2-dev \
-                libjpeg-dev \
-                libpng-dev \
-                libfreetype6-dev \
-                libsasl2-dev \
-                libevent-dev \
-                libpcre3-dev \
-                libgpgme11-dev \
-                pkg-config \
-                patch \
-                automake \
-                libtool \
-                bison \
-                libzip-dev \
-                --no-install-recommends ' \
-        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
-   # install latest php from php git src
-   wget -c --no-check-certificate https://github.com/php/php-src/archive/${PHP_VERSION}.tar.gz && \
+    gcc \
+    g++ \
+    make \
+    cmake \
+    autoconf \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libxslt-dev \
+    libicu-dev \
+    libxml2-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libsasl2-dev \
+    libevent-dev \
+    libpcre3-dev \
+    libgpgme11-dev \
+    pkg-config \
+    patch \
+    automake \
+    libtool \
+    bison \
+    libzip-dev ' \
+   && apt-get update && apt-get install -y --no-install-recommends ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+# install latest php from php git src
+   wget -c --no-check-certificate https://github.com/php/php-src/archive/${PHP_VERSION}.tar.gz -O /tmp/php-src-${PHP_VERSION}.tar.gz && \
     tar xzf php-src-${PHP_VERSION}.tar.gz && \
     cd php-src-${PHP_VERSION} && \
     ./buildconf --force && \
@@ -65,7 +65,7 @@ RUN  buildDeps='\
     /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
     chmod +x /etc/init.d/php-fpm && \
    cd /tmp/ && \
-    # install ImageMagick
+# install ImageMagick
     wget -c --no-check-certificate http://www.imagemagick.org/download/ImageMagick.tar.gz && \
     tar xzf ImageMagick.tar.gz && \
     cd ImageMagick* && \
@@ -81,7 +81,6 @@ RUN  buildDeps='\
     make && make install && \
     echo "extension=imagick.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-imagick.ini && \
    cd /tmp/ && \
-
 # install libmemcached
     wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
@@ -99,7 +98,6 @@ RUN  buildDeps='\
     echo "extension=memcached.so" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     echo "memcached.use_sasl=1" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     cd /tmp/ && \
-
 # install php-redis
     wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
     tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
@@ -109,7 +107,6 @@ RUN  buildDeps='\
     make && make install && \
     echo "extension=redis.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-redis.ini && \
     cd /tmp/ && \
-
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
     wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
