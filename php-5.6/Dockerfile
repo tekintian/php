@@ -8,6 +8,7 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.6 \
     SWOOLE_VERSION=1.9.23 \
+    OPENSSL_VERSION=1.0.2o \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
@@ -36,9 +37,9 @@ RUN  buildDeps='\
                 --no-install-recommends ' \
         && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
 #openssl old version install. 
-    wget -c --no-check-certificate https://www.openssl.org/source/openssl-1.0.2n.tar.gz && \
-    tar xzf openssl-1.0.2n.tar.gz && \
-    cd openssl-1.0.2n && \
+    wget -c --no-check-certificate https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && \
+    tar xzf openssl-${OPENSSL_VERSION}.tar.gz && \
+    cd openssl-${OPENSSL_VERSION} && \
     ./config --prefix=/usr/local/openssl_10 && ./config -t && \
     make && make install && \
     ln -s /usr/local/openssl_10 /usr/local/openssl && \

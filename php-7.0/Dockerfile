@@ -1,4 +1,4 @@
-FROM tekintian/docker-base:latest
+FROM tekintian/docker-base:1.1
 
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 

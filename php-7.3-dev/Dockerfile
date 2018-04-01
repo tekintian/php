@@ -136,7 +136,7 @@ RUN  buildDeps='\
     echo "extension = sphinx.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-sphinx.ini && \
     cd /tmp/ && \
 # install swoole-src with latest master version
-    wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/${SWOOLE_VERSION}.tar.gz  && \
+	wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/${SWOOLE_VERSION}.tar.gz  -O swoole-src-${SWOOLE_VERSION}.tar.gz  && \
     tar xzf swoole-src-${SWOOLE_VERSION}.tar.gz && \
     cd swoole-src-${SWOOLE_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \

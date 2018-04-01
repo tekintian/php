@@ -1,12 +1,13 @@
-FROM tekintian/base:latest
+FROM tekintian/docker-base:1.1
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
-    PHP_VERSION=5.5.37 \
+    PHP_VERSION=5.5.38 \
     IMAGICK_PECL_VERSION=3.4.3RC1 \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.0 \
     SWOOLE_VERSION=1.9.3 \
+    OPENSSL_VERSION=1.0.2o \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
@@ -34,6 +35,14 @@ RUN buildDeps='\
                 patch \
                 --no-install-recommends ' \
         && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+    #openssl old version install. 
+    wget -c --no-check-certificate https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && \
+    tar xzf openssl-${OPENSSL_VERSION}.tar.gz && \
+    cd openssl-${OPENSSL_VERSION} && \
+    ./config --prefix=/usr/local/openssl_10 && ./config -t && \
+    make && make install && \
+    ln -s /usr/local/openssl_10 /usr/local/openssl && \
+    cd /tmp/ && \
     wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
@@ -45,7 +54,7 @@ RUN buildDeps='\
         --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib \
         --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-exif \
         --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local --enable-mbregex \
-        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl \
+        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl=/usr/local/openssl_10 \
         --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-ftp --enable-intl --with-xsl \
         --with-gettext --enable-zip --enable-soap --disable-debug && \
     make ZEND_EXTRA_LIBS='-liconv' && \
