@@ -1,9 +1,9 @@
-FROM tekintian/docker-base:latest
+FROM tekintian/docker-base:1.1
 
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
-    PHP_VERSION=5.6.34 \
+    PHP_VERSION=5.6.35 \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.6 \

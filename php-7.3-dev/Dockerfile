@@ -135,7 +135,6 @@ RUN  buildDeps='\
     make && make install && \
     echo "extension = sphinx.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-sphinx.ini && \
     cd /tmp/ && \
-
 # install swoole 暂时不支持PHP7.3
      #wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
     # tar xzf swoole-${SWOOLE_VERSION}.tgz && \
