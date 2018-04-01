@@ -6,9 +6,9 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=master \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
-    MEMCACHE_PECL_VERSION=3.0.8 \
+    PHP_MEMCACHED_VERSION=master \
     REDIS_PECL_VERSION=3.1.6 \
-    SWOOLE_VERSION=2.1.1 \
+    SWOOLE_VERSION=master \
     OAUTH_PECL_VERSION=2.0.2 \
     SPHINX_PECL_VERSION=1.3.3 \
     GNUPG_VERSION=1.4.0 \
@@ -88,10 +88,10 @@ RUN  buildDeps='\
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-# php-memcached with php-7.3-dev supported fixed By Tekin
-    wget -c --no-check-certificate ${REMOTE_SRC_PATH}/php/src/php-memcached-master-bfixed.tar.gz -O php-memcached-master-bfixed.tar.gz && \
-    tar xzf php-memcached-master-bfixed.tar.gz && \
-    cd php-memcached-master && \
+# php-memcached with php-7.3-dev supported fixed By Tekin   
+    wget -c --no-check-certificate https://github.com/php-memcached-dev/php-memcached/archive/${PHP_MEMCACHED_VERSION}.tar.gz -O php-memcached-${PHP_MEMCACHED_VERSION}.tar.gz && \
+    tar xzf php-memcached-${PHP_MEMCACHED_VERSION}.tar.gz && \
+    cd php-memcached-${PHP_MEMCACHED_VERSION} && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
@@ -135,15 +135,15 @@ RUN  buildDeps='\
     make && make install && \
     echo "extension = sphinx.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-sphinx.ini && \
     cd /tmp/ && \
-# install swoole 暂时不支持PHP7.3
-     #wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
-    # tar xzf swoole-${SWOOLE_VERSION}.tgz && \
-    # cd swoole-${SWOOLE_VERSION} && \
-    # ${PHP_INSTALL_DIR}/bin/phpize && \
-    # ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --enable-jemalloc && \
-    # make && make install && \
-    # echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
-    # cd /tmp/ && \
+# install swoole-src with latest master version
+    wget -c --no-check-certificate https://github.com/swoole/swoole-src/archive/${SWOOLE_VERSION}.tar.gz  && \
+    tar xzf swoole-src-${SWOOLE_VERSION}.tar.gz && \
+    cd swoole-src-${SWOOLE_VERSION} && \
+    ${PHP_INSTALL_DIR}/bin/phpize && \
+    ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config --enable-jemalloc && \
+    make && make install && \
+    echo "extension=swoole.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-swoole.ini && \
+    cd /tmp/ && \
 #gnupg
     wget -c --no-check-certificate http://pecl.php.net/get/gnupg-${GNUPG_VERSION}.tgz  && \
     tar xzf gnupg-${GNUPG_VERSION}.tgz && \
