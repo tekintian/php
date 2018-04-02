@@ -1,4 +1,4 @@
-FROM tekintian/base:latest
+FROM tekintian/docker-base:1.2
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
@@ -7,33 +7,41 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.0 \
     SWOOLE_VERSION=1.9.3 \
+    OPENSSL_VERSION=1.0.0 \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
 
 # install php
 RUN buildDeps='\
-                gcc \
-                g++ \
-                make \
-                cmake \
-                autoconf \
-                libssl-dev \
-                libcurl4-openssl-dev \
-                libxslt-dev \
-                libicu-dev \
-                libxml2-dev \
-                libjpeg-dev \
-                libpng-dev \
-                libfreetype6-dev \
-                libsasl2-dev \
-                libevent-dev \
-                libpcre3-dev \
-                libgpgme11-dev \
-                pkg-config \
-                patch \
-                --no-install-recommends ' \
-        && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+            gcc \
+            g++ \
+            make \
+            cmake \
+            autoconf \
+            libssl-dev \
+            libcurl4-openssl-dev \
+            libxslt-dev \
+            libicu-dev \
+            libxml2-dev \
+            libjpeg-dev \
+            libpng-dev \
+            libfreetype6-dev \
+            libsasl2-dev \
+            libevent-dev \
+            libpcre3-dev \
+            libgpgme11-dev \
+            pkg-config \
+            patch \
+            --no-install-recommends ' \
+    && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+    #openssl old version install. https://github.com/openssl/openssl/archive/OpenSSL_1_0_0-stable.tar.gz
+    wget -c --no-check-certificate https://github.com/openssl/openssl/archive/OpenSSL_1_0_0-stable.tar.gz -O /tmp/openssl-OpenSSL_1_0_0-stable.tar.gz && \
+    tar xzf openssl-OpenSSL_1_0_0-stable.tar.gz && \
+    cd openssl-OpenSSL_1_0_0-stable && \
+    ./config --prefix=/usr/local/openssl && ./config -t && \
+    make && make install && \
+    cd /tmp/ && \
     wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
@@ -45,7 +53,7 @@ RUN buildDeps='\
         --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib \
         --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-exif \
         --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local --enable-mbregex \
-        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl \
+        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl=/usr/local/openssl \
         --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-ftp --enable-intl --with-xsl \
         --with-gettext --enable-zip --enable-soap --disable-debug && \
     make ZEND_EXTRA_LIBS='-liconv' && \

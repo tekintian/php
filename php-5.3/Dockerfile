@@ -1,4 +1,4 @@
-FROM tekintian/base:latest
+FROM tekintian/docker-base:1.2
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
@@ -7,30 +7,55 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
     LIBMEMCACHED_VERSION=1.0.18 \
     REDIS_PECL_VERSION=3.1.0 \
     SWOOLE_VERSION=1.9.3 \
+    OPENSSL_VERSION=1.0.2o \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
 
 WORKDIR /tmp
 
 # install php
-RUN apt-get remove autoconf -y && \
-    apt-get autoremove -y && \
-   apt-get install -y libfreetype6-dev && \
-   mkdir /usr/include/freetype2/freetype && \
-  ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h && \
-
-wget -c --no-check-certificate http://downloads.sourceforge.net/project/re2c/0.16/re2c-0.16.tar.gz && \
+RUN buildDeps='\
+            gcc \
+            g++ \
+            make \
+            cmake \
+            autoconf \
+            libssl-dev \
+            libcurl4-openssl-dev \
+            libxslt-dev \
+            libicu-dev \
+            libxml2-dev \
+            libjpeg-dev \
+            libpng-dev \
+            libfreetype6-dev \
+            libsasl2-dev \
+            libevent-dev \
+            libpcre3-dev \
+            libgpgme11-dev \
+            pkg-config \
+            patch \
+            --no-install-recommends ' \
+    && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+   #openssl old version install. 
+   wget -c --no-check-certificate https://github.com/openssl/openssl/archive/OpenSSL_1_0_0-stable.tar.gz -O /tmp/openssl-OpenSSL_1_0_0-stable.tar.gz && \
+    tar xzf openssl-OpenSSL_1_0_0-stable.tar.gz && \
+    cd openssl-OpenSSL_1_0_0-stable && \
+    ./config --prefix=/usr/local/openssl && ./config -t && \
+    make && make install && \
+    cd /tmp/ && \
+    wget -c --no-check-certificate http://downloads.sourceforge.net/project/re2c/0.16/re2c-0.16.tar.gz && \
     tar xzf re2c-0.16.tar.gz && \
     cd re2c-0.16 && \
     ./configure && make && make install && \
-    cd ..  && \
+   cd /tmp/  && \
     wget -c --no-check-certificate http://ftp.gnu.org/gnu/autoconf/autoconf-2.13.tar.gz && \
     tar xzf autoconf-2.13.tar.gz && \
     cd autoconf-2.13 && \
     ./configure --prefix=/usr/local/autoconf-2.13 && \
     make && make install && \
-     export PHP_AUTOCONF=/usr/local/autoconf-2.13/bin/autoconf && \
-    export PHP_AUTOHEADER=/usr/local/autoconf-2.13/bin/autoheader && \
-    wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
+    export PHP_AUTOCONF=/usr/local/autoconf-2.13/bin/autoconf && \
+    export PHP_AUTOHEADER=/usr/local/autoconf-2.13/bin/autoheader  && \
+    cd /tmp/  && \
+     wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
      ./buildconf --force && \
@@ -41,7 +66,7 @@ wget -c --no-check-certificate http://downloads.sourceforge.net/project/re2c/0.1
         --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib \
         --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-exif \
         --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local --enable-mbregex \
-        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl \
+        --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl=/usr/local/openssl \
         --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-ftp --enable-intl --with-xsl \
         --with-gettext --enable-zip --enable-soap --disable-debug && \
     sed -i '/^BUILD_/ s/\$(CC)/\$(CXX)/g' Makefile && \
@@ -51,10 +76,10 @@ wget -c --no-check-certificate http://downloads.sourceforge.net/project/re2c/0.1
     /bin/cp php.ini-production ${PHP_INSTALL_DIR}/etc/php.ini && \
     /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
     chmod +x /etc/init.d/php-fpm && \
-    rm -rf /tmp/*
+    rm -rf /tmp/*  && \
 
 # cd php-memcached
-RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
+    wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
     sed -i "s@lthread -pthread -pthreads@lthread -lpthread -pthreads@" ./configure && \
@@ -69,7 +94,9 @@ RUN wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBM
     make && make install && \
     echo "extension=memcached.so" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     echo "memcached.use_sasl=1" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
-    rm -rf /tmp/*
+    cd /tmp/ && rm -rf /tmp/* && \
+#remove build deps
+    apt-get purge -y --auto-remove ${buildDeps}
 
 ADD ${REMOTE_SRC_PATH}/ext-opcache.ini ${PHP_INSTALL_DIR}/etc/php.d/ext-opcache.ini
 
