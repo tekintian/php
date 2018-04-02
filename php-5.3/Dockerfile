@@ -77,8 +77,8 @@ RUN buildDeps='\
     /bin/cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && \
     chmod +x /etc/init.d/php-fpm && \
     rm -rf /tmp/*  && \
-
-# cd php-memcached
+# cd php-memcached https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
+	cd /tmp/ && \
     wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
@@ -86,9 +86,10 @@ RUN buildDeps='\
     ./configure && \
     make && make install && \
     cd /tmp/ && \
-    wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/memcached-2.2.0.tgz && \
-    tar xzf memcached-2.2.0.tgz && \
-    cd memcached-2.2.0 && \
+   # wget -c --no-check-certificate http://mirrors.linuxeye.com/oneinstack/src/memcached-2.2.0.tgz && \
+    wget -c --no-check-certificate https://github.com/memcached/memcached/archive/master.tar.gz -O memcached-master.tar.gz && \
+    tar xzf memcached-master.tar.gz && \
+    cd memcached-master && \
     ${PHP_INSTALL_DIR}/bin/phpize && \
     ./configure --with-php-config=${PHP_INSTALL_DIR}/bin/php-config && \
     make && make install && \
