@@ -35,6 +35,7 @@ RUN buildDeps='\
             libgpgme11-dev \
             pkg-config \
             zlib1g-dev \
+            default-libmysqlclient-dev \
             patch \
             --no-install-recommends ' \
     && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
@@ -58,7 +59,6 @@ RUN buildDeps='\
      ./configure --prefix=/usr/local/zlib && \
    # cmake . -DCMAKE_INSTALL_PREFIX=/usr/lib/libpng163 && \
     make && make install && \
-
     cd /tmp/  && \
     #libpng
     cd /tmp/  && \
@@ -68,7 +68,6 @@ RUN buildDeps='\
    # cmake . -DCMAKE_INSTALL_PREFIX=/usr/lib/libpng163 && \
     make && make install && \
     ln -s /usr/local/libpng/lib/libpng.* /usr/lib/ && \
-
     cd /tmp/  && \
     tar zxf php-5.2.17.tar.gz  && \
     cd /tmp/php-5.2.17 && \
@@ -82,6 +81,7 @@ RUN buildDeps='\
     --enable-fpm \
     --enable-mbstring \
     --enable-sockets \
+    --enable-pdo=shared \
     --with-config-file-path=/etc/php \
     --with-curl \
     --with-fpm-conf=/etc/php/php-fpm.conf \
@@ -90,17 +90,15 @@ RUN buildDeps='\
     --with-gd \
     --with-gettext \
     --with-libdir \
-    --with-libdir=lib64 \
+    --with-libdir=lib \
     --with-mcrypt \
     --with-mhash \
-    --with-mysql \
-    --with-mysql-sock \
-    --with-mysqli \
+    --with-mysql=/tmp/libmysql \
+    --with-mysqli=/tmp/libmysql \
+    --with-pdo-mysql=/tmp/libmysql \
     --with-openssl \
     --with-pcre-regex \
     --with-zlib=/usr/local/zlib  \
-    --with-png-dir  \
-    --enable-pdo=shared \
     --with-sqlite=/usr/local/sqlite \
     --with-pdo-sqlite=/usr/local/sqlite && \
     # Install
