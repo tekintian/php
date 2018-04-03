@@ -4,6 +4,7 @@ MAINTAINER Helder Correia <me@heldercorreia.com>
 # This OS comes with a new autoconf tool version, which is
 # not compatible with PHP, that¡¯s why for successful compilation
 # you need to temporarily install autoconf2.13 package.
+# https://hub.docker.com/r/helder/php-5.2/
 RUN apt-get update \
     && apt-get install -y \
         autoconf2.13 \
@@ -15,7 +16,7 @@ RUN apt-get update \
         libmhash-dev \
         libmysqlclient-dev \
         libpcre3-dev \
-        libpng12-dev \
+        libpng-dev \
         libxml2-dev \
         make \
         patch \
