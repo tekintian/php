@@ -43,6 +43,7 @@ RUN  buildDeps='\
     bison \
     libzip-dev ' \
    && apt-get update && apt-get install -y --no-install-recommends ${buildDeps} && rm -rf /var/lib/apt/lists/*  && \
+   cd /tmp/ && \
 # install latest php from php git src
    wget -c --no-check-certificate https://github.com/php/php-src/archive/${PHP_VERSION}.tar.gz -O /tmp/php-src-${PHP_VERSION}.tar.gz && \
     tar xzf php-src-${PHP_VERSION}.tar.gz && \
