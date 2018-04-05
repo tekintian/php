@@ -56,7 +56,7 @@ RUN buildDeps='\
     export PHP_AUTOCONF=/usr/local/autoconf-2.13/bin/autoconf && \
     export PHP_AUTOHEADER=/usr/local/autoconf-2.13/bin/autoheader  && \
     cd /tmp/  && \
-   #  wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
+   # wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
      ./buildconf --force && \

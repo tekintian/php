@@ -17,28 +17,28 @@ ENV PHP_INSTALL_DIR=/usr/local/php \
 WORKDIR /tmp
 #install build deps
 RUN  buildDeps='\
-                gcc \
-                g++ \
-                make \
-                cmake \
-                autoconf \
-                libssl-dev \
-                libcurl4-openssl-dev \
-                libxslt-dev \
-                libicu-dev \
-                libxml2-dev \
-                libjpeg-dev \
-                libpng-dev \
-                libfreetype6-dev \
-                libsasl2-dev \
-                libevent-dev \
-                libpcre3-dev \
-                libgpgme11-dev \
-                pkg-config \
-                patch \
-                --no-install-recommends ' \
+        gcc \
+        g++ \
+        make \
+        cmake \
+        autoconf \
+        libssl-dev \
+        libcurl4-openssl-dev \
+        libxslt-dev \
+        libicu-dev \
+        libxml2-dev \
+        libjpeg-dev \
+        libpng-dev \
+        libfreetype6-dev \
+        libsasl2-dev \
+        libevent-dev \
+        libpcre3-dev \
+        libgpgme11-dev \
+        pkg-config \
+        patch \
+        --no-install-recommends ' \
         && apt-get update && apt-get install -y ${buildDeps} && rm -rf /var/lib/apt/lists/* && \
-    # install php
+    # install php 7.0.29
     wget -c --no-check-certificate http://www.php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xzf php-${PHP_VERSION}.tar.gz && \
     cd php-${PHP_VERSION} && \
@@ -80,7 +80,6 @@ RUN  buildDeps='\
 # install php-memcached-php7
 # git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
 # https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz
-#
     wget -c --no-check-certificate https://launchpad.net/libmemcached/1.0/${LIBMEMCACHED_VERSION}/+download/libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     tar xzf libmemcached-${LIBMEMCACHED_VERSION}.tar.gz && \
     cd libmemcached-${LIBMEMCACHED_VERSION} && \
@@ -97,7 +96,6 @@ RUN  buildDeps='\
     echo "extension=memcached.so" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     echo "memcached.use_sasl=1" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     cd /tmp/ && \
-
 # install php-redis
     wget -c --no-check-certificate http://pecl.php.net/get/redis-${REDIS_PECL_VERSION}.tgz && \
     tar xzf redis-${REDIS_PECL_VERSION}.tgz && \
@@ -107,7 +105,6 @@ RUN  buildDeps='\
     make && make install && \
     echo "extension=redis.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-redis.ini && \
     cd /tmp/ && \
-
 # install oauth http://pecl.php.net/get/oauth-2.0.2.tgz
 # $AUTH_PECL_VERSION
     wget -c --no-check-certificate http://pecl.php.net/get/oauth-${OAUTH_PECL_VERSION}.tgz && \
@@ -120,7 +117,6 @@ RUN  buildDeps='\
     cd /tmp/ && \
 #http://pecl.php.net/package/sphinx/1.3.3
 #$PREFIXhttp://sphinxsearch.com/downloads/sphinx-2.2.11-release.tar.gz/thankyou.html
-
     wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
     tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
     ./configure && make && make install && \
@@ -137,7 +133,6 @@ RUN  buildDeps='\
     make && make install && \
     echo "extension = sphinx.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-sphinx.ini && \
     cd /tmp/ && \
-
 # install swoole
     wget -c --no-check-certificate http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz  && \
     tar xzf swoole-${SWOOLE_VERSION}.tgz && \
