@@ -94,16 +94,23 @@ RUN buildDeps='\
     make && make install && \
     echo "extension=memcached.so" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
     echo "memcached.use_sasl=1" >> ${PHP_INSTALL_DIR}/etc/php.d/ext-memcached.ini && \
+    cd /tmp/ && \
+   # wget http://downloads.zend.com/guard/5.5.0/ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
+    tar xzf ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz && \
+    cp ZendGuardLoader-php-5.3-linux-glibc23-x86_64/php-5.3.x/ZendGuardLoader.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/  && \
+    cd /tmp/ && \
+    #ioncube
+    #wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+    tar xzf ioncube_loaders_lin_x86-64.tar.gz && \
+    cp ioncube/ioncube_loader_lin_5.3.so  /usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/  && \
     cd /tmp/ && rm -rf /tmp/* && \
 #remove build deps
     apt-get purge -y --auto-remove ${buildDeps}
 
-ADD ${REMOTE_SRC_PATH}/ext-opcache.ini ${PHP_INSTALL_DIR}/etc/php.d/ext-opcache.ini
-
 # run install script
-ADD ${REMOTE_SRC_PATH}/install.sh /tmp/install.sh
-RUN chmod 777 install.sh && \
-    bash install.sh && \
+ADD install_zend.sh /tmp/install_zend.sh
+RUN chmod 777 install_zend.sh && \
+    bash install_zend.sh && \
     rm -rf /tmp/*
 
 # install composer
@@ -112,7 +119,7 @@ RUN curl -sS https://getcomposer.org/installer | ${PHP_INSTALL_DIR}/bin/php && \
     chmod a+x /usr/local/bin/composer
 
 # Set the entrypoint script.
-ADD ${REMOTE_SRC_PATH}/entrypoint.sh /entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
