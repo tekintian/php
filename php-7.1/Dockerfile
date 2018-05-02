@@ -3,7 +3,7 @@ FROM tekintian/docker-base:latest
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
-    PHP_VERSION=7.1.16 \
+    PHP_VERSION=7.1.17 \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
     MEMCACHE_PECL_VERSION=3.0.8 \

@@ -1,0 +1,25 @@
+./configure \
+    --enable-fastcgi \
+    --enable-fpm \
+    --enable-mbstring \
+    --enable-sockets \
+    --enable-pdo=shared \
+    --with-config-file-path=/etc/php \
+    --with-curl \
+    --with-fpm-conf=/etc/php/php-fpm.conf \
+    --with-fpm-log=/var/log/php/php_errors.log \
+    --with-fpm-pid=/var/run/php/php-fpm.pid \
+    --with-gd \
+    --with-gettext \
+    --with-libdir \
+    --with-libdir=lib \
+    --with-mcrypt \
+    --with-mhash \
+    --with-mysql \
+    --with-mysqli  \
+    --with-pdo-mysql \
+    --with-openssl \
+    --with-pcre-regex \
+    --with-zlib  \
+    --with-sqlite=/usr/local/sqlite \
+    --with-pdo-sqlite=/usr/local/sqlite
