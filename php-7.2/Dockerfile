@@ -1,6 +1,6 @@
 FROM tekintian/docker-base:latest
 
-MAINTAINER Tekin Tian <tekintian@gmail.com>
+LABEL maintainer="TekinTian tekintian@gmail.com"
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=7.2.12 \

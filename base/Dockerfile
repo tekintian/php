@@ -1,6 +1,6 @@
 FROM debian:9-slim
 
-MAINTAINER Tekin Tian <tekintian@gmail.com>
+LABEL maintainer="TekinTian tekintian@gmail.com"
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r www && useradd -r -g www -M -s /sbin/nologin www

@@ -1,4 +1,4 @@
-FROM tekintian/docker-base:1.2
+FROM tekintian/docker-base:latest
 MAINTAINER Tekin <tekintian@gmail.com>
 
 ADD tmp/ /tmp

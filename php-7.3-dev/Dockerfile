@@ -1,13 +1,12 @@
-FROM tekintian/docker-base:1.2
-
-MAINTAINER Tekin Tian <tekintian@gmail.com>
+FROM tekintian/docker-base:latest
+LABEL maintainer="TekinTian tekintian@gmail.com"
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=master \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
     PHP_MEMCACHED_VERSION=master \
-    REDIS_PECL_VERSION=3.1.6 \
+    REDIS_PECL_VERSION=4.2.0 \
     SWOOLE_VERSION=master \
     OAUTH_PECL_VERSION=2.0.2 \
     SPHINX_PECL_VERSION=1.3.3 \

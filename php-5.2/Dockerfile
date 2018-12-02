@@ -1,5 +1,5 @@
-FROM tekintian/docker-base:1.2
-MAINTAINER Tekin Tian <tekintian@gmail.com>
+FROM tekintian/docker-base:latest
+LABEL maintainer="TekinTian tekintian@gmail.com"
 
 # This OS comes with a new autoconf tool version, which is
 # not compatible with PHP, that’s why for successful compilation

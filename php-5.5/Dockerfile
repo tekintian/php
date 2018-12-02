@@ -1,5 +1,5 @@
-FROM tekintian/docker-base:1.2
-MAINTAINER Tekin Tian <tekintian@gmail.com>
+FROM tekintian/docker-base:latest
+LABEL maintainer="TekinTian tekintian@gmail.com"
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
     PHP_VERSION=5.5.38 \

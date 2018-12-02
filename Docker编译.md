@@ -20,11 +20,11 @@
 
 ## tengine
 
-cd /Users/Github/tengine-php/php-7.2-waf && docker build -t tekintian/tengine-php:7.2.5-waf .
-cd /Users/Github/tengine-php/php-7.2 && docker build -t tekintian/tengine-php:7.2.5 .
+cd /Users/Github/tengine-php/php-7.2-waf && docker build -t tekintian/tengine-php:7.2.12-waf .
+cd /Users/Github/tengine-php/php-7.2 && docker build -t tekintian/tengine-php:7.2.12 .
 
-cd /Users/Github/tengine-php/php-7.1 && docker build -t tekintian/tengine-php:7.1.17 .
-cd /Users/Github/tengine-php/php-7.1-waf && docker build -t tekintian/tengine-php:7.1.17-waf .
+cd /Users/Github/tengine-php/php-7.1 && docker build -t tekintian/tengine-php:7.1.24 .
+cd /Users/Github/tengine-php/php-7.1-waf && docker build -t tekintian/tengine-php:7.1.24-waf .
 
 cd /Users/Github/tengine-php/php-7.0 && docker build -t tekintian/tengine-php:7.0.30 .
 cd /Users/Github/tengine-php/php-7.0-waf && docker build -t tekintian/tengine-php:7.0.30-waf .
@@ -36,11 +36,11 @@ cd /Users/Github/tengine-php/php-5.6 && docker build -t tekintian/tengine-php:5.
 
 cd /Users/Github/nginx-php/7.3-waf && docker build -t tekintian/nginx-php:7.3-build20180428 .
 
-cd /Users/Github/nginx-php/7.2-waf && docker build -t tekintian/nginx-php:7.2.5-waf .
-cd /Users/Github/nginx-php/7.2 && docker build -t tekintian/nginx-php:7.2.5 .
+cd /Users/Github/nginx-php/7.2-waf && docker build -t tekintian/nginx-php:7.2.12-waf .
+cd /Users/Github/nginx-php/7.2 && docker build -t tekintian/nginx-php:7.2.12 .
 
-cd /Users/Github/nginx-php/7.1 && docker build -t tekintian/nginx-php:7.1.17 .
-cd /Users/Github/nginx-php/7.1-waf && docker build -t tekintian/nginx-php:7.1.17-waf .
+cd /Users/Github/nginx-php/7.1 && docker build -t tekintian/nginx-php:7.1.24 .
+cd /Users/Github/nginx-php/7.1-waf && docker build -t tekintian/nginx-php:7.1.24-waf .
 
 cd /Users/Github/nginx-php/7.0 && docker build -t tekintian/nginx-php:7.0.30 .
 cd /Users/Github/nginx-php/7.0-waf && docker build -t tekintian/nginx-php:7.0.30-waf .
@@ -49,10 +49,10 @@ cd /Users/Github/nginx-php/5.6 && docker build -t tekintian/nginx-php:5.6.36 .
 
 ## 推送
 docker push tekintian/nginx-php:7.3-build20180428
-docker push tekintian/nginx-php:7.2.5-waf
-docker push tekintian/nginx-php:7.2.5
-docker push tekintian/nginx-php:7.1.17-waf
-docker push tekintian/nginx-php:7.1.17
+docker push tekintian/nginx-php:7.2.12-waf
+docker push tekintian/nginx-php:7.2.12
+docker push tekintian/nginx-php:7.1.24-waf
+docker push tekintian/nginx-php:7.1.24
 docker push tekintian/nginx-php:7.0.30-waf
 docker push tekintian/nginx-php:7.0.30
 docker push tekintian/nginx-php:5.6.36
