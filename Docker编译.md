@@ -18,6 +18,13 @@
 	cd /Users/Github/php/php-7.3-dev && docker build -t tekintian/php:7.3-build20181202 .
 
 
+
+docker tag tekintian/php:7.2.12 tekintian/php:7.2
+docker tag tekintian/php:7.1.24 tekintian/php:7.1
+docker tag tekintian/php:7.0.32 tekintian/php:7.0
+docker tag tekintian/php:5.6.38 tekintian/php:5.6
+
+
 ## tengine
 
 cd /Users/Github/tengine-php/php-7.2-waf && docker build -t tekintian/tengine-php:7.2.12-waf .
@@ -57,6 +64,12 @@ docker push tekintian/nginx-php:7.0.30-waf
 docker push tekintian/nginx-php:7.0.30
 docker push tekintian/nginx-php:5.6.36
 
+tag 给镜像起别名
+Usage:	docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+
+Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+docker tag tekintian/php:7.1.24 tekintian/php:7.1
 
 ***
 #Run：
