@@ -3,13 +3,13 @@ FROM tekintian/docker-base:latest
 MAINTAINER Tekin Tian <tekintian@gmail.com>
 
 ENV PHP_INSTALL_DIR=/usr/local/php \
-    PHP_VERSION=7.2.5 \
+    PHP_VERSION=7.2.12 \
     IMAGICK_PECL_VERSION=3.4.3 \
     LIBMEMCACHED_VERSION=1.0.18 \
     MEMCACHE_PECL_VERSION=3.0.8 \
-    REDIS_PECL_VERSION=3.1.6 \
-    SWOOLE_VERSION=2.1.1 \
-    OAUTH_PECL_VERSION=2.0.2 \
+    REDIS_PECL_VERSION=4.2.0 \
+    SWOOLE_VERSION=4.2.9 \
+    OAUTH_PECL_VERSION=2.0.3 \
     SPHINX_PECL_VERSION=1.3.3 \
     GNUPG_VERSION=1.4.0 \
     REMOTE_SRC_PATH=https://github.com/tekintian/php/raw/master
