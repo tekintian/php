@@ -118,8 +118,8 @@ RUN  buildDeps='\
     echo "extension=oauth.so" > ${PHP_INSTALL_DIR}/etc/php.d/ext-oauth.ini && \
     cd /tmp/ && \
 #http://pecl.php.net/package/sphinx/1.3.3
-    wget  -c --no-check-certificate https://nchc.dl.sourceforge.net/project/re2c/1.0.1/re2c-1.0.1.tar.gz && \
-    tar -zxvf re2c-1.0.1.tar.gz && cd re2c-1.0.1 && \
+    wget  -c --no-check-certificate https://astuteinternet.dl.sourceforge.net/project/re2c/0.16/re2c-0.16.tar.gz && \
+    tar -zxvf re2c-0.16.tar.gz && cd re2c-0.16 && \
     ./configure && make && make install && \
     cd /tmp/ && \
     wget http://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz && \
